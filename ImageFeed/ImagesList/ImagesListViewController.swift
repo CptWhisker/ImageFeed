@@ -12,55 +12,57 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
-// MARK: - Lifecycle
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        
+        checkResourcesAvaliability()
     }
     
-// MARK: - Private Functions
+    // MARK: - Private Functions
+    
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
-            presentErrorAlert(title: "Image Loading Error", message: "Failed to load images from resources")
             return
         }
         cell.cellImage.image = cellImage
         
         cell.dateLabel.text = dateFormatter.string(from: currentDate)
         
-        guard let likeOn = UIImage(named: "buttonActivated"), let likeOff = UIImage(named: "buttonDeactivated") else {
-            presentErrorAlert(title: "Image Loading Error", message: "Failed to load icons from resources")
-            return
-        }
-        if indexPath.row % 2 == 0 {
-            cell.likeButton.imageView?.image = likeOn
-        } else {
-            cell.likeButton.imageView?.image = likeOff
-        }
-        
-        let dateGradientLayer = CAGradientLayer()
-        dateGradientLayer.frame = cell.dateGradientView.bounds
-        dateGradientLayer.colors = [
-            UIColor(named: "YP Black")!.withAlphaComponent(0).cgColor,
-            UIColor(named: "YP Black")!.withAlphaComponent(0.2).cgColor,
-            UIColor(named: "YP Black")!.withAlphaComponent(0).cgColor
-        ]
-        dateGradientLayer.locations = [0, 0.5, 1]
-        cell.dateGradientView.layer.addSublayer(dateGradientLayer)
+        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: "buttonActivated") : UIImage(named: "buttonDeactivated")
+        cell.likeButton.imageView?.image = cellLikeIcon
     }
     
-    private func presentErrorAlert(title: String, message: String) {
-        let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "Dismiss", style: .default) { [weak self] _ in
-            self?.dismiss(animated: true)
+    private func checkResourcesAvaliability() {
+        var imageErrors = 0
+        
+        for photoName in photosName {
+            if UIImage(named: photoName) == nil {
+                imageErrors += 1
+            }
         }
-        errorAlert.addAction(alertAction)
-        present(errorAlert, animated: true, completion: nil)
+        
+        if imageErrors == photosName.count {
+            print("Image Loading Error: Failed to load images from resources")
+        } else if imageErrors > 0 {
+            print("Image Loading Error: Failed to load one or more images from resources")
+        }
+        
+        if UIImage(named: "buttonActivated") == nil || UIImage(named: "buttonDeactivated") == nil {
+            print("Image Loading Error: Failed to load one or more icons from resources")
+        }
+        
+        if imageErrors > 0 {
+            print("Cell Configuration Error: Failed to configure dynamic cell height")
+        }
     }
 }
 
 // MARK: - DataSource
+
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photosName.count
@@ -70,7 +72,7 @@ extension ImagesListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
         guard let imageListCell = cell as? ImagesListCell else {
-            presentErrorAlert(title: "Typecast Error", message: "Failed to dequeue ImagesListCell")
+            print("Typecast Error: Failed to dequeue ImagesListCell")
             return UITableViewCell()
         }
         
@@ -80,6 +82,7 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 // MARK: - Delegate
+
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -90,7 +93,6 @@ extension ImagesListViewController: UITableViewDelegate {
         let verticalInset: CGFloat = 4
         
         guard let image = UIImage(named: photosName[indexPath.row]) else {
-            presentErrorAlert(title: "Cell Configuration Error", message: "Failed to configure dynamic cell height")
             return 200
         }
         
