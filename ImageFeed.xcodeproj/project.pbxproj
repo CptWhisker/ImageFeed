@@ -14,6 +14,7 @@
 		CE6DA9582BE3FB4600D08293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6DA9572BE3FB4600D08293 /* Assets.xcassets */; };
 		CE6DA95B2BE3FB4600D08293 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6DA9592BE3FB4600D08293 /* LaunchScreen.storyboard */; };
 		CE6DA9832BE7BA0700D08293 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DA9822BE7BA0700D08293 /* ImagesListCell.swift */; };
+		CE914AAF2C04E85900525E75 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE914AAE2C04E85900525E75 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		CE6DA95A2BE3FB4600D08293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE6DA95C2BE3FB4600D08293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE6DA9822BE7BA0700D08293 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		CE914AAE2C04E85900525E75 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 		CE6DA94D2BE3FB4200D08293 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				CE914AB02C0501B000525E75 /* Profile */,
 				CE6DA9842BE7BA5700D08293 /* ImagesList */,
 				CE6DA94E2BE3FB4200D08293 /* AppDelegate.swift */,
 				CE6DA9502BE3FB4200D08293 /* SceneDelegate.swift */,
@@ -76,6 +79,14 @@
 				CE6DA9822BE7BA0700D08293 /* ImagesListCell.swift */,
 			);
 			path = ImagesList;
+			sourceTree = "<group>";
+		};
+		CE914AB02C0501B000525E75 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CE914AAE2C04E85900525E75 /* ProfileViewController.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +162,7 @@
 			files = (
 				CE6DA9532BE3FB4200D08293 /* ImagesListViewController.swift in Sources */,
 				CE6DA9832BE7BA0700D08293 /* ImagesListCell.swift in Sources */,
+				CE914AAF2C04E85900525E75 /* ProfileViewController.swift in Sources */,
 				CE6DA94F2BE3FB4200D08293 /* AppDelegate.swift in Sources */,
 				CE6DA9512BE3FB4200D08293 /* SceneDelegate.swift in Sources */,
 			);
