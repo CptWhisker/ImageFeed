@@ -26,6 +26,7 @@ final class ImagesListViewController: UIViewController {
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
+            cell.cellImage.image = nil
             return
         }
         cell.cellImage.image = cellImage
@@ -33,7 +34,7 @@ final class ImagesListViewController: UIViewController {
         cell.dateLabel.text = dateFormatter.string(from: currentDate)
         
         let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: "buttonActivated") : UIImage(named: "buttonDeactivated")
-        cell.likeButton.imageView?.image = cellLikeIcon
+        cell.likeButton.setImage(cellLikeIcon, for: .normal)
     }
     
     private func checkResourcesAvaliability() {
