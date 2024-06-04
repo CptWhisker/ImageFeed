@@ -14,7 +14,7 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var backwardButton: UIButton!
-    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet private weak var shareButton: UIButton!
     
 // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -57,11 +57,11 @@ final class SingleImageViewController: UIViewController {
     }
 
 // MARK: IBActions
-    @IBAction func didTapBackwardButton(_ sender: UIButton) {
+    @IBAction private func didTapBackwardButton(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func didTapShareButton(_ sender: UIButton) {
+    @IBAction private func didTapShareButton(_ sender: UIButton) {
         let itemToShare = [image]
         let activityController = UIActivityViewController(activityItems: itemToShare as [Any], applicationActivities: nil)
         present(activityController, animated: true, completion: nil)
