@@ -1,18 +1,53 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
-    private var profilePictureImage: UIImageView?
-    private var logoutButton: UIButton?
-    private var nameLabel: UILabel?
-    private var socialMediaLabel: UILabel?
-    private var profileStatusLabel: UILabel?
+// MARK: - Variables
+    private lazy var profilePictureImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "profilePictureStub"))
+        imageView.tintColor = .ypGray
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    private lazy var logoutButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "logoutButton"), for: .normal)
+        button.tintColor = .ypRed
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Aleksandr Moskovtsev"
+        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.textColor = .ypWhite
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    private lazy var socialMediaLabel: UILabel = {
+        let label = UILabel()
+        label.text = "@cpt_whisker"
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .ypGray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    private lazy var profileStatusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Haters gonna hate"
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .ypWhite
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
+// MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureInterface()
     }
     
+// MARK: Private Functions
     private func configureInterface() {
         configureProfilePictureImage()
         configureLogoutButton()
@@ -22,10 +57,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configureProfilePictureImage() {
-        profilePictureImage = UIImageView(image: UIImage(named: "profilePictureStub"))
-        guard let profilePictureImage else { return }
-        profilePictureImage.tintColor = .ypGray
-        profilePictureImage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profilePictureImage)
         
         NSLayoutConstraint.activate([
@@ -37,11 +68,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configureLogoutButton() {
-        logoutButton = UIButton(type: .system)
-        guard let logoutButton, let profilePictureImage else { return }
-        logoutButton.setImage(UIImage(named: "logoutButton"), for: .normal)
-        logoutButton.tintColor = .ypRed
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
         
         NSLayoutConstraint.activate([
@@ -53,12 +79,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configureNameLabel() {
-        nameLabel = UILabel()
-        guard let nameLabel, let profilePictureImage else { return }
-        nameLabel.text = "Aleksandr Moskovtsev"
-        nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        nameLabel.textColor = .ypWhite
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         
         NSLayoutConstraint.activate([
@@ -69,12 +89,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configureSocialMediaLabel() {
-        socialMediaLabel = UILabel()
-        guard let socialMediaLabel, let nameLabel else { return }
-        socialMediaLabel.text = "@cpt_whisker"
-        socialMediaLabel.font = UIFont.systemFont(ofSize: 13)
-        socialMediaLabel.textColor = .ypGray
-        socialMediaLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(socialMediaLabel)
         
         NSLayoutConstraint.activate([
@@ -85,12 +99,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func configureProfileStatusLabel() {
-        profileStatusLabel = UILabel()
-        guard let profileStatusLabel, let socialMediaLabel else { return }
-        profileStatusLabel.text = "Haters gonna hate"
-        profileStatusLabel.font = UIFont.systemFont(ofSize: 13)
-        profileStatusLabel.textColor = .ypWhite
-        profileStatusLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileStatusLabel)
         
         NSLayoutConstraint.activate([
