@@ -11,6 +11,7 @@ final class ImagesListViewController: UIViewController {
         formatter.timeStyle = .none
         return formatter
     }()
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     // MARK: - Lifecycle
     
@@ -26,6 +27,7 @@ final class ImagesListViewController: UIViewController {
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
+            cell.cellImage.image = nil
             return
         }
         cell.cellImage.image = cellImage
@@ -33,7 +35,7 @@ final class ImagesListViewController: UIViewController {
         cell.dateLabel.text = dateFormatter.string(from: currentDate)
         
         let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: "buttonActivated") : UIImage(named: "buttonDeactivated")
-        cell.likeButton.imageView?.image = cellLikeIcon
+        cell.likeButton.setImage(cellLikeIcon, for: .normal)
     }
     
     private func checkResourcesAvaliability() {
@@ -57,6 +59,23 @@ final class ImagesListViewController: UIViewController {
         
         if imageErrors > 0 {
             print("Cell Configuration Error: Failed to configure dynamic cell height")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            guard
+                let viewController = segue.destination as? SingleImageViewController,
+                let indexPath = sender as? IndexPath
+            else {
+                assertionFailure("Invalid segue destination")
+                return
+            }
+            
+            let image = UIImage(named: photosName[indexPath.row])
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
         }
     }
 }
@@ -85,7 +104,7 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
