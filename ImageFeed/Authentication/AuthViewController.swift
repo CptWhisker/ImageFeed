@@ -14,6 +14,7 @@ final class AuthViewController: UIViewController {
         button.backgroundColor = .ypWhite
         button.setTitle("Войти", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        button.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -28,6 +29,7 @@ final class AuthViewController: UIViewController {
         view.backgroundColor = UIColor.ypBlack
         configureUnsplashLogo()
         configureLoginButton()
+        configureBackButton()
     }
     
     private func configureUnsplashLogo() {
@@ -48,5 +50,16 @@ final class AuthViewController: UIViewController {
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
         ])
+    }
+    
+    private func configureBackButton() {
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navigationBackButton")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navigationBackButton")
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = .ypBlack
+    }
+    
+    @objc private func didTapLoginButton() {
+        performSegue(withIdentifier: "ShowWebView", sender: self)
     }
 }

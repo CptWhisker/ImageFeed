@@ -42,10 +42,29 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="CLE-5s-GxP"/>
+                    <connections>
+                        <segue destination="Xfl-M3-Azu" kind="show" identifier="ShowWebView" id="Z9J-oL-Jj4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="67H-LK-xMt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-146.51162790697674" y="-256.22317596566523"/>
+            <point key="canvasLocation" x="-116" y="-933"/>
+        </scene>
+        <!--Web View View Controller-->
+        <scene sceneID="NPt-8R-9X6">
+            <objects>
+                <viewController id="Xfl-M3-Azu" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XxK-jD-6UH">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="9jl-x7-he3"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nxu-0D-xNP"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7rd-a8-kLX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="784" y="-933"/>
         </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
@@ -247,7 +266,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b3U-PY-3pT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1045.1162790697674" y="-256.22317596566523"/>
+            <point key="canvasLocation" x="-1045" y="-933"/>
         </scene>
     </scenes>
     <resources>
