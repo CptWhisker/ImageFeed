@@ -10,10 +10,10 @@ final class AuthViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.layer.cornerRadius = 16
-        button.tintColor = .ypWhite
+        button.tintColor = .ypBlack
+        button.backgroundColor = .ypWhite
         button.setTitle("Войти", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        button.setTitleColor(.ypBlack, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -25,6 +25,7 @@ final class AuthViewController: UIViewController {
     }
     
     private func configureInterface() {
+        view.backgroundColor = UIColor.ypBlack
         configureUnsplashLogo()
         configureLoginButton()
     }
@@ -44,8 +45,8 @@ final class AuthViewController: UIViewController {
         NSLayoutConstraint.activate([
             loginButton.heightAnchor.constraint(equalToConstant: 48),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 16),
-            loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 90)
+            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
         ])
     }
 }
