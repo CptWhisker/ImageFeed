@@ -9,6 +9,7 @@ final class AuthViewController: UIViewController {
     }()
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
+        button.layer.cornerRadius = 16
         button.tintColor = .ypWhite
         button.setTitle("Войти", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
