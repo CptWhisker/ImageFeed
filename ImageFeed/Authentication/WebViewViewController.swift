@@ -8,6 +8,13 @@ final class WebViewViewController: UIViewController {
         webView.translatesAutoresizingMaskIntoConstraints = false
         return webView
     }()
+    private lazy var loadingBar: UIProgressView = {
+        let progressView = UIProgressView(progressViewStyle: .bar)
+        progressView.progressTintColor = .ypBlack
+        progressView.progress = 0.5
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        return progressView
+    }()
     
     var delegate: WebViewViewControllerDelegate?
     
@@ -23,6 +30,7 @@ final class WebViewViewController: UIViewController {
     private func configureInterface() {
         view.backgroundColor = .ypWhite
         configureWebView()
+        configureLoadingBar()
     }
     
     private func configureWebView() {
@@ -33,6 +41,16 @@ final class WebViewViewController: UIViewController {
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    func configureLoadingBar() {
+        view.addSubview(loadingBar)
+        
+        NSLayoutConstraint.activate([
+            loadingBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            loadingBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            loadingBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
     
