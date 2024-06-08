@@ -9,14 +9,19 @@ final class WebViewViewController: UIViewController {
         return webView
     }()
     
+    var delegate: WebViewViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        webView.navigationDelegate = self
+        
         configureInterface()
+        loadAuthView()
     }
     
     private func configureInterface() {
-        view.backgroundColor = UIColor.ypWhite
+        view.backgroundColor = .ypWhite
         configureWebView()
     }
     
@@ -29,5 +34,52 @@ final class WebViewViewController: UIViewController {
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    private func loadAuthView() {
+        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
+            print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
+            return
+        }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: Constants.accessScope)
+        ]
+        
+        guard let url = urlComponents.url else {
+            print("Error: Unable to create URL from urlComponents")
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+    
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if
+            let url = navigationAction.request.url,
+            let urlComponents = URLComponents(string: url.absoluteString),
+            urlComponents.path == "/oauth/authoriza/native",
+            let items = urlComponents.queryItems,
+            let codeItem = items.first(where: { $0.name == "code" })
+        {
+            return codeItem.value
+        } else {
+            return nil
+        }
+    }
+}
+
+extension WebViewViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let code = code(from: navigationAction) {
+            delegate?.webViewViewControllerDidAuthanticateWithCode(self, code: code)
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
+        }
     }
 }

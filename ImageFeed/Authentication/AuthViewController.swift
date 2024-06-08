@@ -26,7 +26,7 @@ final class AuthViewController: UIViewController {
     }
     
     private func configureInterface() {
-        view.backgroundColor = UIColor.ypBlack
+        view.backgroundColor = .ypBlack
         configureUnsplashLogo()
         configureLoginButton()
         configureBackButton()
@@ -61,5 +61,21 @@ final class AuthViewController: UIViewController {
     
     @objc private func didTapLoginButton() {
         performSegue(withIdentifier: "ShowWebView", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowWebView", let webViewViewController = segue.destination as? WebViewViewController {
+            webViewViewController.delegate = self
+        }
+    }
+}
+
+extension AuthViewController: WebViewViewControllerDelegate {
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true, completion: nil)
+    }
+    
+    func webViewViewControllerDidAuthanticateWithCode(_ vc: WebViewViewController, code: String) {
+        //TODO: Write some code here
     }
 }
