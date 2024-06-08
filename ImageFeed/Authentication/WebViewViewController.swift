@@ -11,7 +11,6 @@ final class WebViewViewController: UIViewController {
     private lazy var loadingBar: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.progressTintColor = .ypBlack
-        progressView.progress = 0.5
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
@@ -25,6 +24,17 @@ final class WebViewViewController: UIViewController {
         
         configureInterface()
         loadAuthView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+        updateProgress()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
     private func configureInterface() {
@@ -87,6 +97,19 @@ final class WebViewViewController: UIViewController {
             return codeItem.value
         } else {
             return nil
+        }
+    }
+    
+    private func updateProgress() {
+        loadingBar.progress = Float(webView.estimatedProgress)
+        loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(WKWebView.estimatedProgress) {
+            updateProgress()
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
 }
