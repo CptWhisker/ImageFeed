@@ -18,6 +18,7 @@ final class AuthViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    private let oauth2Service = OAuth2Service.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +66,7 @@ final class AuthViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowWebView", let webViewViewController = segue.destination as? WebViewViewController {
+            print("Setting WebViewViewController delegate")
             webViewViewController.delegate = self
         }
     }
@@ -76,6 +78,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewControllerDidAuthanticateWithCode(_ vc: WebViewViewController, code: String) {
-        //TODO: Write some code here
+        print("webViewViewControllerDidAuthanticateWithCode called with code: \(code)")
+        oauth2Service.fetchOAuthToken(with: code)
+        print("Token fetched successfully")
+        print("Dismissing WebViewViewController")
+        navigationController?.popViewController(animated: true)
     }
 }
