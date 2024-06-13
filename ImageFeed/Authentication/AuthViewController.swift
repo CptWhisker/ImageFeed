@@ -86,7 +86,7 @@ extension AuthViewController {
     }
 }
 
-// MARK: WebViewVewControllerDelegate
+// MARK: - WebViewVewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewControllerDidAuthenticateWithCode(_ vc: WebViewViewController, code: String) {
         navigationController?.popViewController(animated: true)
