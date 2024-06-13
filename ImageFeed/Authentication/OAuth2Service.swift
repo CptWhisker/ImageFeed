@@ -33,25 +33,23 @@ final class OAuth2Service {
         return request
     }
     
-    func fetchOAuthToken(with code: String) {
+    func fetchOAuthToken(with code: String, completion: @escaping (Result<OAuthTokenResponseBody,Error>) -> Void) {
         guard let request = generateOAuthTokenRequest(with: code) else {
             return
         }
         
-        print("Sending request to fetch OAuth token")
         networkClient.fetch(request: request) { result in
             switch result {
             case .success(let data):
                 do {
                     let oauthToken = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    self.tokenStorage.bearerToken = oauthToken.accessToken
-                    print("OAuth token fetched and stored: \(oauthToken.accessToken)")
+                    completion(.success(oauthToken))
                 } catch {
-                    print(NetworkError.decodingError.localizedDescription)
+                    completion(.failure(NetworkError.decodingError))
                 }
                 
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }

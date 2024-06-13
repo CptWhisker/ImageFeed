@@ -11,7 +11,6 @@ final class ImagesListViewController: UIViewController {
         formatter.timeStyle = .none
         return formatter
     }()
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     // MARK: - Lifecycle
     
@@ -34,7 +33,7 @@ final class ImagesListViewController: UIViewController {
         
         cell.dateLabel.text = dateFormatter.string(from: currentDate)
         
-        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: "buttonActivated") : UIImage(named: "buttonDeactivated")
+        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: Icons.buttonActivated) : UIImage(named: Icons.buttonDeactivated)
         cell.likeButton.setImage(cellLikeIcon, for: .normal)
     }
     
@@ -53,7 +52,7 @@ final class ImagesListViewController: UIViewController {
             print("Image Loading Error: Failed to load one or more images from resources")
         }
         
-        if UIImage(named: "buttonActivated") == nil || UIImage(named: "buttonDeactivated") == nil {
+        if UIImage(named: Icons.buttonActivated) == nil || UIImage(named: Icons.buttonDeactivated) == nil {
             print("Image Loading Error: Failed to load one or more icons from resources")
         }
         
@@ -63,7 +62,7 @@ final class ImagesListViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageSegueIdentifier {
+        if segue.identifier == segueDestinations.singleImageSegue {
             guard
                 let viewController = segue.destination as? SingleImageViewController,
                 let indexPath = sender as? IndexPath
@@ -104,7 +103,7 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+        performSegue(withIdentifier: segueDestinations.singleImageSegue, sender: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

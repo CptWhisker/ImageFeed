@@ -2,7 +2,7 @@ import UIKit
 
 final class AuthViewController: UIViewController {
     private lazy var unsplashLogo: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "unsplashLogo"))
+        let imageView = UIImageView(image: UIImage(named: Icons.unsplashLogo))
         imageView.tintColor = .ypWhite
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -18,7 +18,11 @@ final class AuthViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    private lazy var tokenStorage: OAuth2TokenStorage = {
+        return OAuth2TokenStorage()
+    }()
     private let oauth2Service = OAuth2Service.shared
+    weak var delegate: AuthViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,34 +58,35 @@ final class AuthViewController: UIViewController {
     }
     
     private func configureBackButton() {
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "navigationBackButton")
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "navigationBackButton")
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: Icons.navigationBackButton)
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: Icons.navigationBackButton)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .ypBlack
     }
     
     @objc private func didTapLoginButton() {
-        performSegue(withIdentifier: "ShowWebView", sender: self)
+        performSegue(withIdentifier: segueDestinations.webViewSegue, sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowWebView", let webViewViewController = segue.destination as? WebViewViewController {
-            print("Setting WebViewViewController delegate")
+        if segue.identifier == segueDestinations.webViewSegue, let webViewViewController = segue.destination as? WebViewViewController {
             webViewViewController.delegate = self
         }
     }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true, completion: nil)
-    }
-    
     func webViewViewControllerDidAuthanticateWithCode(_ vc: WebViewViewController, code: String) {
-        print("webViewViewControllerDidAuthanticateWithCode called with code: \(code)")
-        oauth2Service.fetchOAuthToken(with: code)
-        print("Token fetched successfully")
-        print("Dismissing WebViewViewController")
         navigationController?.popViewController(animated: true)
+        
+        oauth2Service.fetchOAuthToken(with: code) { result in
+            switch result {
+            case .success(let oauthToken):
+                self.tokenStorage.bearerToken = oauthToken.accessToken
+                self.delegate?.didAuthenticate(vc: self)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }

@@ -14,3 +14,20 @@ enum Constants {
 enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
+
+enum segueDestinations {
+    static let singleImageSegue = "ShowSingleImage"
+    static let webViewSegue = "ShowWebView"
+    static let authSegue = "proceedToAuthViewController"
+    static let imageFeedSegue = "proceedToImageFeed"
+}
+
+enum Icons {
+    static let practicumLogo = "practicumLogo"
+    static let unsplashLogo = "unsplashLogo"
+    static let navigationBackButton = "navigationBackButton"
+    static let profilePictureStub = "profilePictureStub"
+    static let logoutButton = "logoutButton"
+    static let buttonActivated = "buttonActivated"
+    static let buttonDeactivated = "buttonDeactivated"
+}

@@ -54,7 +54,7 @@ final class WebViewViewController: UIViewController {
         ])
     }
     
-    func configureLoadingBar() {
+    private func configureLoadingBar() {
         view.addSubview(loadingBar)
         
         NSLayoutConstraint.activate([
