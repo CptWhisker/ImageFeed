@@ -1,6 +1,7 @@
 import UIKit
 
 final class AuthViewController: UIViewController {
+    // MARK: - Properties
     private lazy var unsplashLogo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.unsplashLogo))
         imageView.tintColor = .ypWhite
@@ -18,18 +19,18 @@ final class AuthViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    private lazy var tokenStorage: OAuth2TokenStorage = {
-        return OAuth2TokenStorage()
-    }()
+    private let tokenStorage = OAuth2TokenStorage.shared
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureInterface()
     }
     
+    // MARK: - Configuration
     private func configureInterface() {
         view.backgroundColor = .ypBlack
         configureUnsplashLogo()
@@ -64,22 +65,35 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = .ypBlack
     }
     
+    // MARK: - Actions
     @objc private func didTapLoginButton() {
         performSegue(withIdentifier: segueDestinations.webViewSegue, sender: self)
     }
-    
+}
+
+// MARK: - Navigation
+extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.webViewSegue, let webViewViewController = segue.destination as? WebViewViewController {
+        if segue.identifier == segueDestinations.webViewSegue {
+            guard let webViewViewController = segue.destination as? WebViewViewController else {
+                assertionFailure("Failed to prepare for \(segueDestinations.webViewSegue) segue")
+                return
+            }
             webViewViewController.delegate = self
+        } else {
+            super.prepare(for: segue, sender: sender)
         }
     }
 }
 
+// MARK: WebViewVewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
-    func webViewViewControllerDidAuthanticateWithCode(_ vc: WebViewViewController, code: String) {
+    func webViewViewControllerDidAuthenticateWithCode(_ vc: WebViewViewController, code: String) {
         navigationController?.popViewController(animated: true)
         
-        oauth2Service.fetchOAuthToken(with: code) { result in
+        oauth2Service.fetchOAuthToken(with: code) { [weak self] result in
+            guard let self else { return }
+            
             switch result {
             case .success(let oauthToken):
                 self.tokenStorage.bearerToken = oauthToken.accessToken

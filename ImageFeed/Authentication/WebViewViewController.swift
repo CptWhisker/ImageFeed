@@ -2,6 +2,7 @@ import UIKit
 import WebKit
 
 final class WebViewViewController: UIViewController {
+    // MARK: - Properties
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
         webView.backgroundColor = .ypWhite
@@ -14,9 +15,9 @@ final class WebViewViewController: UIViewController {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
+    weak var delegate: WebViewViewControllerDelegate?
     
-    var delegate: WebViewViewControllerDelegate?
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,6 +38,7 @@ final class WebViewViewController: UIViewController {
         webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
+    // MARK: - Configuration
     private func configureInterface() {
         view.backgroundColor = .ypWhite
         configureWebView()
@@ -114,10 +116,11 @@ final class WebViewViewController: UIViewController {
     }
 }
 
+// MARK: - WKNavigationDelegate
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
-            delegate?.webViewViewControllerDidAuthanticateWithCode(self, code: code)
+            delegate?.webViewViewControllerDidAuthenticateWithCode(self, code: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)

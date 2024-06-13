@@ -1,6 +1,7 @@
 import UIKit
 
 final class OAuth2Service {
+    // MARK: - Properties
     static let shared = OAuth2Service()
     private lazy var networkClient: NetworkClient = {
         return NetworkClient()
@@ -8,12 +9,10 @@ final class OAuth2Service {
     private lazy var decoder: JSONDecoder = {
         return JSONDecoder()
     }()
-    private lazy var tokenStorage: OAuth2TokenStorage = {
-        return OAuth2TokenStorage()
-    }()
     
     private init() {}
     
+    // MARK: - Private methods
     private func generateOAuthTokenRequest(with code: String) -> URLRequest? {
         guard let url = URL(
             string: "\(Constants.baseURL)"
@@ -33,8 +32,10 @@ final class OAuth2Service {
         return request
     }
     
+    // MARK: - Public methods
     func fetchOAuthToken(with code: String, completion: @escaping (Result<OAuthTokenResponseBody,Error>) -> Void) {
         guard let request = generateOAuthTokenRequest(with: code) else {
+            print("Unable to generate URLRequest")
             return
         }
         

@@ -1,14 +1,16 @@
 import UIKit
 
 final class SplashViewController: UIViewController {
+    // MARK: - Properties
     private lazy var practicumLogo: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.practicumLogo))
         imageView.tintColor = .ypWhite
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -19,12 +21,13 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
         
         if storage.bearerToken != nil {
-            performSegue(withIdentifier: segueDestinations.imageFeedSegue, sender: self)
+            switchToTabBarController()
         } else {
             performSegue(withIdentifier: segueDestinations.authSegue, sender: self)
         }
     }
     
+    // MARK: - Configuration
     private func configureInterface() {
         view.backgroundColor = .ypBlack
         
@@ -50,10 +53,14 @@ final class SplashViewController: UIViewController {
         
         window.rootViewController = tabBarViewController
     }
+}
 
+// MARK: - Navigation
+extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueDestinations.authSegue {
-            guard let navigationController = segue.destination as? UINavigationController, let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
+            guard let navigationController = segue.destination as? UINavigationController,
+                  let authViewController = navigationController.viewControllers.first as? AuthViewController else {
                 assertionFailure("Failed to prepare for \(segueDestinations.authSegue) segue")
                 return
             }
@@ -64,11 +71,9 @@ final class SplashViewController: UIViewController {
     }
 }
 
+// MARK: - AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(vc: AuthViewController) {
         switchToTabBarController()
-        vc.dismiss(animated: true){
-            self.performSegue(withIdentifier: segueDestinations.imageFeedSegue, sender: self)
-        }
     }
 }
