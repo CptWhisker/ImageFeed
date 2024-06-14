@@ -13,17 +13,20 @@ final class NetworkClient: NetworkRouting {
         }
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if error != nil {
+            if let error {
+                print("Network error occurred: \(error.localizedDescription)")
                 fullfillHandlerOnMainThread(.failure(NetworkError.dataTaskError))
                 return
             }
             
             if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode >= 300 {
+                print("Invalid HTTP response: \(response.statusCode)")
                 fullfillHandlerOnMainThread(.failure(NetworkError.responseError))
                 return
             }
             
             guard let data else {
+                print("Data fetch error: no data received")
                 fullfillHandlerOnMainThread(.failure(NetworkError.dataFetchError))
                 return
             }

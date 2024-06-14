@@ -7,7 +7,9 @@ final class OAuth2Service {
         return NetworkClient()
     }()
     private lazy var decoder: JSONDecoder = {
-        return JSONDecoder()
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
     }()
     
     private init() {}
@@ -36,6 +38,7 @@ final class OAuth2Service {
     func fetchOAuthToken(with code: String, completion: @escaping (Result<OAuthTokenResponseBody,Error>) -> Void) {
         guard let request = generateOAuthTokenRequest(with: code) else {
             print("Unable to generate URLRequest")
+            completion(.failure(NetworkError.urlRequestError))
             return
         }
         
@@ -43,9 +46,10 @@ final class OAuth2Service {
             switch result {
             case .success(let data):
                 do {
-                    let oauthToken = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(oauthToken))
+                    let oauthResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
+                    completion(.success(oauthResponse))
                 } catch {
+                    print("Decoding error: \(error.localizedDescription)")
                     completion(.failure(NetworkError.decodingError))
                 }
                 

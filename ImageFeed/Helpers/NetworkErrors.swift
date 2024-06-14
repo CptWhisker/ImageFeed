@@ -1,6 +1,7 @@
 import Foundation
 
 enum NetworkError: Error {
+    case urlRequestError
     case dataTaskError
     case responseError
     case dataFetchError
@@ -10,6 +11,8 @@ enum NetworkError: Error {
 extension NetworkError: LocalizedError {
     var errorDescription: String? {
         switch self {
+        case .urlRequestError:
+            return NSLocalizedString("Unable to generate URLRequest", comment: "URLRequest error")
         case .dataTaskError:
             return NSLocalizedString("Error while launching URLSession", comment: "URLSession error")
         case .responseError:

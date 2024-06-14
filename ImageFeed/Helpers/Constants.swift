@@ -8,7 +8,12 @@ enum Constants {
     static let grantType = "authorization_code"
     static let baseURL = "https://unsplash.com"
     static let urlPath = "/oauth/token"
-    static let defaultBaseURL = URL(string: "https://api.unsplash.com")!
+    static var defaultBaseURL: URL {
+        guard let url = URL(string: "https://api.unsplash.com") else {
+            fatalError("Invalid URL: https://api.unsplash.com")
+        }
+        return url
+    }
 }
 
 enum WebViewConstants {
