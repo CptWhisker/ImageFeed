@@ -98,6 +98,7 @@ final class WebViewViewController: UIViewController {
         {
             return codeItem.value
         } else {
+            print("Unable to retrieve code")
             return nil
         }
     }
