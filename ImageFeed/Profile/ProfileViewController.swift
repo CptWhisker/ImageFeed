@@ -3,14 +3,14 @@ import UIKit
 final class ProfileViewController: UIViewController {
 // MARK: - Variables
     private lazy var profilePictureImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "profilePictureStub"))
+        let imageView = UIImageView(image: UIImage(named: Icons.profilePictureStub))
         imageView.tintColor = .ypGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     private lazy var logoutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "logoutButton"), for: .normal)
+        button.setImage(UIImage(named: Icons.logoutButton), for: .normal)
         button.tintColor = .ypRed
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
