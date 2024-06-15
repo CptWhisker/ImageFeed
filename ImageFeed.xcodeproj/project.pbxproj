@@ -28,6 +28,7 @@
 		CEF0611C2C1A38D400CF0562 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0611B2C1A38D400CF0562 /* SplashViewController.swift */; };
 		CEF0611E2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */; };
 		CEF061262C1DA9B100CF0562 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = CEF061252C1DA9B100CF0562 /* ProgressHUD */; };
+		CEF061282C1DB15000CF0562 /* AuthServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061272C1DB15000CF0562 /* AuthServiceError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		CEF061192C178D8200CF0562 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		CEF0611B2C1A38D400CF0562 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewControllerDelegate.swift; sourceTree = "<group>"; };
+		CEF061272C1DB15000CF0562 /* AuthServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 			children = (
 				CEF061062C11004E00CF0562 /* Constants.swift */,
 				CEF061122C15DDEC00CF0562 /* NetworkErrors.swift */,
+				CEF061272C1DB15000CF0562 /* AuthServiceError.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				CEF061152C1785E400CF0562 /* NetworkClient.swift in Sources */,
 				CE914AB22C06438400525E75 /* SingleImageViewController.swift in Sources */,
 				CEF061182C178B8000CF0562 /* OAuthTokenResponseBody.swift in Sources */,
+				CEF061282C1DB15000CF0562 /* AuthServiceError.swift in Sources */,
 				CEF0610F2C14577400CF0562 /* WebViewViewControllerDelegate.swift in Sources */,
 				CEF0611A2C178D8200CF0562 /* OAuth2TokenStorage.swift in Sources */,
 				CEF0610C2C12497C00CF0562 /* WebViewViewController.swift in Sources */,

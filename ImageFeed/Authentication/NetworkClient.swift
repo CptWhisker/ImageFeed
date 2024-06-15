@@ -5,10 +5,17 @@ protocol NetworkRouting {
 }
 
 final class NetworkClient: NetworkRouting {
+    var task: URLSessionTask?
+    var lastCode: String?
+    
     func fetch(request:URLRequest, handler: @escaping (Result<Data,Error>) -> Void) {
         let fullfillHandlerOnMainThread: (Result<Data,Error>) -> Void = { result in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                
                 handler(result)
+                self.task = nil
+                self.lastCode = nil
             }
         }
         
@@ -34,6 +41,7 @@ final class NetworkClient: NetworkRouting {
             fullfillHandlerOnMainThread(.success(data))
         }
         
+        self.task = task
         task.resume()
     }
 }
