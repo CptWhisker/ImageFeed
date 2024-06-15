@@ -37,20 +37,13 @@ final class OAuth2Service {
     // MARK: - Public methods
     func fetchOAuthToken(with code: String, completion: @escaping (Result<OAuthTokenResponseBody,Error>) -> Void) {
         assert(Thread.isMainThread)
-        if networkClient.task != nil {
-            if networkClient.lastCode != code {
-                networkClient.task?.cancel()
-            } else {
-                completion(.failure(AuthServiceError.invalidRequest))
-                return
-            }
-        } else {
-            if networkClient.lastCode == code {
-                completion(.failure(AuthServiceError.invalidRequest))
-                return
-            }
+        
+        guard networkClient.lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
         }
         
+        networkClient.task?.cancel()
         networkClient.lastCode = code
         
         guard let request = generateOAuthTokenRequest(with: code) else {
