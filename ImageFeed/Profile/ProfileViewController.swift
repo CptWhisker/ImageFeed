@@ -113,7 +113,13 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateInterfaceData() {
-        profileService.fetchProfile { result in
+        UIBlockingProgressHUD.block()
+        
+        profileService.fetchProfile { [weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.unblock()
+            
             switch result {
             case .success(let profile):
                 self.nameLabel.text = profile.name

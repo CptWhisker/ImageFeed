@@ -35,13 +35,16 @@ final class ProfileService {
     
     func fetchProfile(completion: @escaping (Result<Profile,Error>) -> Void) {
         // TODO: Handle race here
+        assert(Thread.isMainThread)
+        
+        networkClient.task?.cancel()
         
         guard let request = generateURLRequest() else {
             print("Unable to generate Profile URLRequest")
             return
         }
         
-        networkClient.fetchProfile(request: request) { result in
+        networkClient.fetch(request: request) { result in
             switch result {
             case .success(let data):
                 do {
