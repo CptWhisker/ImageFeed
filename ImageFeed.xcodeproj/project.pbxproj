@@ -30,6 +30,9 @@
 		CEF061262C1DA9B100CF0562 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = CEF061252C1DA9B100CF0562 /* ProgressHUD */; };
 		CEF061282C1DB15000CF0562 /* AuthServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061272C1DB15000CF0562 /* AuthServiceError.swift */; };
 		CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612A2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift */; };
+		CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */; };
+		CEF0612F2C1E097B00CF0562 /* ProfileResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */; };
+		CEF061312C1E09BE00CF0562 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061302C1E09BE00CF0562 /* Profile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +60,9 @@
 		CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewControllerDelegate.swift; sourceTree = "<group>"; };
 		CEF061272C1DB15000CF0562 /* AuthServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceError.swift; sourceTree = "<group>"; };
 		CEF0612A2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
+		CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResponseBody.swift; sourceTree = "<group>"; };
+		CEF061302C1E09BE00CF0562 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				CE914AAE2C04E85900525E75 /* ProfileViewController.swift */,
+				CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -169,6 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				CEF061172C178B8000CF0562 /* OAuthTokenResponseBody.swift */,
+				CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */,
+				CEF061302C1E09BE00CF0562 /* Profile.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -267,6 +276,7 @@
 				CEF0610A2C121B5A00CF0562 /* AuthViewController.swift in Sources */,
 				CEF0611E2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift in Sources */,
 				CEF061072C11004E00CF0562 /* Constants.swift in Sources */,
+				CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */,
 				CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */,
 				CEF061152C1785E400CF0562 /* NetworkClient.swift in Sources */,
 				CE914AB22C06438400525E75 /* SingleImageViewController.swift in Sources */,
@@ -276,6 +286,8 @@
 				CEF0611A2C178D8200CF0562 /* OAuth2TokenStorage.swift in Sources */,
 				CEF0610C2C12497C00CF0562 /* WebViewViewController.swift in Sources */,
 				CE6DA9512BE3FB4200D08293 /* SceneDelegate.swift in Sources */,
+				CEF061312C1E09BE00CF0562 /* Profile.swift in Sources */,
+				CEF0612F2C1E097B00CF0562 /* ProfileResponseBody.swift in Sources */,
 				CEF0611C2C1A38D400CF0562 /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

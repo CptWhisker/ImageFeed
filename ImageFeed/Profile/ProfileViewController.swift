@@ -17,7 +17,7 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Aleksandr Moskovtsev"
+//        label.text = "Aleksandr Moskovtsev"
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         label.textColor = .ypWhite
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +25,7 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var socialMediaLabel: UILabel = {
         let label = UILabel()
-        label.text = "@cpt_whisker"
+//        label.text = "@cpt_whisker"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .ypGray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,11 +33,14 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var profileStatusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Haters gonna hate"
+//        label.text = "Haters gonna hate"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .ypWhite
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    private lazy var profileService: ProfileService = {
+        return ProfileService.shared
     }()
     
 // MARK: - Lifecycle
@@ -45,6 +48,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         configureInterface()
+        updateInterfaceData()
     }
     
 // MARK: Private Functions
@@ -106,5 +110,18 @@ final class ProfileViewController: UIViewController {
             profileStatusLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             profileStatusLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16)
         ])
+    }
+    
+    private func updateInterfaceData() {
+        profileService.fetchProfile { result in
+            switch result {
+            case .success(let profile):
+                self.nameLabel.text = profile.name
+                self.socialMediaLabel.text = profile.username
+                self.profileStatusLabel.text = profile.bio
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }

@@ -25,7 +25,7 @@ final class OAuth2Service {
             + "&&code=\(code)"
             + "&&grant_type=\(Constants.grantType)"
         ) else {
-            print("Unable to create URL from string")
+            print("Unable to create Auth URL from string")
             return nil
         }
         
@@ -47,7 +47,7 @@ final class OAuth2Service {
         networkClient.lastCode = code
         
         guard let request = generateOAuthTokenRequest(with: code) else {
-            print("Unable to generate URLRequest")
+            print("Unable to generate Auth URLRequest")
             completion(.failure(NetworkError.urlRequestError))
             return
         }
