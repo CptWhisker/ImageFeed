@@ -34,7 +34,6 @@ final class ProfileService {
     }
     
     func fetchProfile(completion: @escaping (Result<Profile,Error>) -> Void) {
-        // TODO: Handle race here
         assert(Thread.isMainThread)
         
         networkClient.task?.cancel()

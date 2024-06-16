@@ -8,7 +8,11 @@ final class SplashViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    private lazy var profileService: ProfileService = {
+        return ProfileService.shared
+    }()
     private let storage = OAuth2TokenStorage.shared
+    private var loadedProfile: Profile?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -21,7 +25,7 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
         
         if storage.bearerToken != nil {
-            switchToTabBarController()
+            loadProfile()
         } else {
             performSegue(withIdentifier: segueDestinations.authSegue, sender: self)
         }
@@ -51,6 +55,14 @@ final class SplashViewController: UIViewController {
         
         let tabBarViewController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
         
+        if let tabBarController = tabBarViewController as? UITabBarController,
+           let viewController = tabBarController.viewControllers?.first(where: { $0 is ProfileViewController }) as? ProfileViewController,
+           let loadedProfile {
+            viewController.setProfile(loadedProfile)
+        } else {
+            print("Naviagtion error: ProfileViewController not found")
+        }
+        
         window.rootViewController = tabBarViewController
     }
 }
@@ -74,6 +86,29 @@ extension SplashViewController {
 // MARK: - AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(vc: AuthViewController) {
-        switchToTabBarController()
+        guard storage.bearerToken != nil else { return }
+        
+        loadProfile()
+    }
+}
+
+// MARK: - LoadProfile
+extension SplashViewController {
+    private func loadProfile() {
+        UIBlockingProgressHUD.showAnimation()
+        
+        profileService.fetchProfile { [weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.dismissAnimation()
+            
+            switch result {
+            case .success(let profile):
+                self.loadedProfile = profile
+                self.switchToTabBarController()
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 }

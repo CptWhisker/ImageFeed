@@ -43,6 +43,8 @@ final class ProfileViewController: UIViewController {
         return ProfileService.shared
     }()
     
+    private var profile: Profile?
+    
 // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,21 +115,16 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateInterfaceData() {
-        UIBlockingProgressHUD.block()
-        
-        profileService.fetchProfile { [weak self] result in
-            guard let self else { return }
-            
-            UIBlockingProgressHUD.unblock()
-            
-            switch result {
-            case .success(let profile):
-                self.nameLabel.text = profile.name
-                self.socialMediaLabel.text = profile.username
-                self.profileStatusLabel.text = profile.bio
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+        guard let profile = profile else {
+            return
         }
+        
+        nameLabel.text = profile.name
+        socialMediaLabel.text = profile.username
+        profileStatusLabel.text = profile.bio
+    }
+    
+    func setProfile(_ profile: Profile) {
+        self.profile = profile
     }
 }
