@@ -33,6 +33,8 @@
 		CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */; };
 		CEF0612F2C1E097B00CF0562 /* ProfileResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */; };
 		CEF061312C1E09BE00CF0562 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061302C1E09BE00CF0562 /* Profile.swift */; };
+		CEF061332C2C7CE900CF0562 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061322C2C7CE900CF0562 /* ProfileImageService.swift */; };
+		CEF061352C2C7FE400CF0562 /* ProfileImageResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061342C2C7FE400CF0562 /* ProfileImageResponseBody.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +65,8 @@
 		CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResponseBody.swift; sourceTree = "<group>"; };
 		CEF061302C1E09BE00CF0562 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		CEF061322C2C7CE900CF0562 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
+		CEF061342C2C7FE400CF0562 /* ProfileImageResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageResponseBody.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +133,7 @@
 			children = (
 				CE914AAE2C04E85900525E75 /* ProfileViewController.swift */,
 				CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */,
+				CEF061322C2C7CE900CF0562 /* ProfileImageService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 			children = (
 				CEF061172C178B8000CF0562 /* OAuthTokenResponseBody.swift */,
 				CEF0612E2C1E097B00CF0562 /* ProfileResponseBody.swift */,
+				CEF061342C2C7FE400CF0562 /* ProfileImageResponseBody.swift */,
 				CEF061302C1E09BE00CF0562 /* Profile.swift */,
 			);
 			path = Models;
@@ -269,6 +275,7 @@
 			files = (
 				CE6DA9532BE3FB4200D08293 /* ImagesListViewController.swift in Sources */,
 				CE6DA9832BE7BA0700D08293 /* ImagesListCell.swift in Sources */,
+				CEF061352C2C7FE400CF0562 /* ProfileImageResponseBody.swift in Sources */,
 				CE914AAF2C04E85900525E75 /* ProfileViewController.swift in Sources */,
 				CE6DA94F2BE3FB4200D08293 /* AppDelegate.swift in Sources */,
 				CEF061112C15A81E00CF0562 /* OAuth2Service.swift in Sources */,
@@ -278,6 +285,7 @@
 				CEF061072C11004E00CF0562 /* Constants.swift in Sources */,
 				CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */,
 				CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */,
+				CEF061332C2C7CE900CF0562 /* ProfileImageService.swift in Sources */,
 				CEF061152C1785E400CF0562 /* NetworkClient.swift in Sources */,
 				CE914AB22C06438400525E75 /* SingleImageViewController.swift in Sources */,
 				CEF061182C178B8000CF0562 /* OAuthTokenResponseBody.swift in Sources */,

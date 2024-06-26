@@ -5,3 +5,4 @@ struct Profile {
     let name: String
     let bio: String
 }
+

@@ -11,6 +11,9 @@ final class SplashViewController: UIViewController {
     private lazy var profileService: ProfileService = {
         return ProfileService.shared
     }()
+    private lazy var profileImageService: ProfileImageService = {
+        return ProfileImageService.shared
+    }()
     private let storage = OAuth2TokenStorage.shared
     private var loadedProfile: Profile?
     
@@ -104,6 +107,23 @@ extension SplashViewController {
             
             switch result {
             case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] result in
+                    guard let self else { return }
+                    
+                    switch result {
+                    case .success(let image):
+                        NotificationCenter.default.post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": image]
+                        )
+                        
+                        self.profileImageService.profileImage = image
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                
                 self.loadedProfile = profile
                 self.switchToTabBarController()
             case .failure(let error):
