@@ -63,7 +63,7 @@ final class SplashViewController: UIViewController {
            let loadedProfile {
             viewController.setProfile(loadedProfile)
         } else {
-            print("Naviagtion error: ProfileViewController not found")
+            print("[SplashViewController switchToTabBarController]: Naviagtion error - ProfileViewController not found")
         }
         
         window.rootViewController = tabBarViewController

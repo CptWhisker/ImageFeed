@@ -103,8 +103,24 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.tokenStorage.bearerToken = oauthResponse.accessToken
                 self.delegate?.didAuthenticate(vc: self)
             case .failure(let error):
-                print(error.localizedDescription)
+                print("[AuthViewController webViewViewControllerDidAuthenticateWithCode]: \(error.localizedDescription)")
+
+                presentAuthenticationFailureAlert()
             }
         }
+    }
+}
+
+// MARK: - AlertController
+extension AuthViewController {
+    private func presentAuthenticationFailureAlert() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        let action = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alertController.addAction(action)
+        present(alertController, animated: true, completion: nil)
     }
 }

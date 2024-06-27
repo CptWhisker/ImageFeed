@@ -5,11 +5,16 @@ protocol NetworkRouting {
 }
 
 final class NetworkClient: NetworkRouting {
+    private lazy var decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
     var task: URLSessionTask?
     var lastCode: String?
     
-    func fetch(request:URLRequest, handler: @escaping (Result<Data,Error>) -> Void) {
-        let fullfillHandlerOnMainThread: (Result<Data,Error>) -> Void = { result in
+    func fetch<T: Decodable>(request:URLRequest, handler: @escaping (Result<T,Error>) -> Void) {
+        let fullfillHandlerOnMainThread: (Result<T,Error>) -> Void = { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 
@@ -21,24 +26,30 @@ final class NetworkClient: NetworkRouting {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
-                print("Network error occurred: \(error.localizedDescription)")
+                print("[NetworkClient fetch]: dataTaskError - \(error.localizedDescription), Request: \(request)")
                 fullfillHandlerOnMainThread(.failure(NetworkError.dataTaskError))
                 return
             }
             
             if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode >= 300 {
-                print("Invalid HTTP response: \(response.statusCode)")
+                print("[NetworkClient fetch]: responseError - Invalid HTTP response: \(response.statusCode), Request: \(request)")
                 fullfillHandlerOnMainThread(.failure(NetworkError.responseError))
                 return
             }
             
             guard let data else {
-                print("Data fetch error: no data received")
+                print("[NetworkClient fetch]: dataFetchError - no data received, Request: \(request)")
                 fullfillHandlerOnMainThread(.failure(NetworkError.dataFetchError))
                 return
             }
             
-            fullfillHandlerOnMainThread(.success(data))
+            do {
+                let decodedObject = try self.decoder.decode(T.self, from: data)
+                fullfillHandlerOnMainThread(.success(decodedObject))
+            } catch {
+                print("[NetworkClient fetch]: decodingError - \(error.localizedDescription), Data: \(String(data: data, encoding: .utf8) ?? ""), Request: \(request)")
+                fullfillHandlerOnMainThread(.failure(NetworkError.decodingError))
+            }
         }
         
         self.task = task

@@ -15,6 +15,7 @@ final class WebViewViewController: UIViewController {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
+    private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
     
     // MARK: - Lifecycle
@@ -25,17 +26,12 @@ final class WebViewViewController: UIViewController {
         
         configureInterface()
         loadAuthView()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-        updateProgress()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        
+        estimatedProgressObservation = webView.observe(\.estimatedProgress, options: []) { [weak self] _, _ in
+            guard let self else { return }
+            
+            self.updateProgress()
+        }
     }
     
     // MARK: - Configuration
@@ -89,6 +85,7 @@ final class WebViewViewController: UIViewController {
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
+        print("We are inside code func")
         if
             let url = navigationAction.request.url,
             let urlComponents = URLComponents(string: url.absoluteString),
@@ -98,7 +95,7 @@ final class WebViewViewController: UIViewController {
         {
             return codeItem.value
         } else {
-            print("Unable to retrieve code")
+            print("Unable to retrieve code from URL: \(navigationAction.request.url?.absoluteString ?? "No URL")")
             return nil
         }
     }
@@ -106,19 +103,6 @@ final class WebViewViewController: UIViewController {
     private func updateProgress() {
         loadingBar.progress = Float(webView.estimatedProgress)
         loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-    }
-    
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
 }
 
@@ -129,6 +113,8 @@ extension WebViewViewController: WKNavigationDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
+        print("Nav action: \(navigationAction)")
+        print("Nav action URL: \(navigationAction.request.url?.absoluteString ?? "No URL")")
         if let code = code(from: navigationAction) {
             delegate?.webViewViewControllerDidAuthenticateWithCode(self, code: code)
             decisionHandler(.cancel)

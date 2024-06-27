@@ -20,12 +20,12 @@ final class ProfileImageService {
     
     private func generateURLRequest(username: String) -> URLRequest? {
         guard let accessToken else {
-            print("Error: Missing access token")
+            print("[ProfileImageService generateURLRequest]: accessTokenError - Missing access token")
             return nil
         }
         
         guard let url = URL(string: "\(Constants.defaultBaseURL)/users/\(username.dropFirst())") else {
-            print("Unable to create Profile URL from string")
+            print("[ProfileImageService generateURLRequest]: urlRequestError - Unable to create ProfileImage URL from string")
             return nil
         }
         
@@ -41,23 +41,17 @@ final class ProfileImageService {
         networkClient.task?.cancel()
         
         guard let request = generateURLRequest(username: username) else {
-            print("Unable to generate Profile URLRequest")
+            print("[ProfileImageService fetchProfileImageURL]: urlRequestError - Unable to generate Profile URLRequest")
             return
         }
         
-        networkClient.fetch(request: request) { result in
+        networkClient.fetch(request: request) { (result: Result<ProfileImageResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let profileImageResponse = try self.decoder.decode(ProfileImageResponseBody.self, from: data)
-                    let profileURL = profileImageResponse.profileImage.small
-                    completion(.success(profileURL))
-                } catch {
-                    print("Decoding error: \(error.localizedDescription)")
-                    completion(.failure(NetworkError.decodingError))
-                }
-                
-            case.failure(let error):
+            case .success(let profileImageResponse):
+                 let profileURL = profileImageResponse.profileImage.small
+                 completion(.success(profileURL))
+            case .failure(let error):
+                print("[ProfileImageService fetchProfileImageURL]: \(error.localizedDescription) - Error while fetching profile image URL")
                 completion(.failure(error))
             }
         }

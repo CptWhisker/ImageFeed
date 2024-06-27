@@ -25,7 +25,7 @@ final class OAuth2Service {
             + "&&code=\(code)"
             + "&&grant_type=\(Constants.grantType)"
         ) else {
-            print("Unable to create Auth URL from string")
+            print("[OAuth2Service generateOAuthTokenRequest]: urlRequestError - Unable to create Auth URL from string with code: \(code)")
             return nil
         }
         
@@ -47,23 +47,17 @@ final class OAuth2Service {
         networkClient.lastCode = code
         
         guard let request = generateOAuthTokenRequest(with: code) else {
-            print("Unable to generate Auth URLRequest")
+            print("[OAuth2Service fetchOAuthToken]: urlRequestError - Unable to generate Auth URLRequest with code: \(code)")
             completion(.failure(NetworkError.urlRequestError))
             return
         }
         
-        networkClient.fetch(request: request) { result in
+        networkClient.fetch(request: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let oauthResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(oauthResponse))
-                } catch {
-                    print("Decoding error: \(error.localizedDescription)")
-                    completion(.failure(NetworkError.decodingError))
-                }
-                
+            case .success(let oauthResponse):
+                completion(.success(oauthResponse))
             case .failure(let error):
+                print("[OAuth2Service fetchOAuthToken]: \(error.localizedDescription) - Error while fetching OAuth token with code: \(code)")
                 completion(.failure(error))
             }
         }

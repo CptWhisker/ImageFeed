@@ -18,12 +18,12 @@ final class ProfileService {
 
     private func generateURLRequest() -> URLRequest? {
         guard let accessToken else {
-            print("Error: Missing access token")
+            print("[ProfileService generateURLRequest]: accessTokenError - Missing access token")
             return nil
         }
         
         guard let url = URL(string: "\(Constants.defaultBaseURL)/me") else {
-            print("Unable to create Profile URL from string")
+            print("[ProfileService generateURLRequest]: urlRequestError - Unable to create Profile URL from string")
             return nil
         }
         
@@ -39,26 +39,22 @@ final class ProfileService {
         networkClient.task?.cancel()
         
         guard let request = generateURLRequest() else {
-            print("Unable to generate Profile URLRequest")
+            print("[ProfileService fetchProfile]: urlRequestError - Unable to generate Profile URLRequest")
             return
         }
         
-        networkClient.fetch(request: request) { result in
+        networkClient.fetch(request: request) { (result: Result<ProfileResponseBody, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let profileResponse = try self.decoder.decode(ProfileResponseBody.self, from: data)
-                    let profile = Profile(
-                        username: "@\(profileResponse.username)",
-                        name: "\(profileResponse.firstName) \(profileResponse.lastName)",
-                        bio: profileResponse.bio)
-                    completion(.success(profile))
-                } catch {
-                    print("Decoding error: \(error.localizedDescription)")
-                    completion(.failure(NetworkError.decodingError))
-                }
+            case .success(let profileResponse):
+                let profile = Profile(
+                    username: "@\(profileResponse.username)",
+                    name: "\(profileResponse.firstName) \(profileResponse.lastName)",
+                    bio: profileResponse.bio
+                )
                 
+                completion(.success(profile))
             case.failure(let error):
+                print("[ProfileService fetchProfile]: \(error.localizedDescription) - Error while fetching profile")
                 completion(.failure(error))
             }
         }
