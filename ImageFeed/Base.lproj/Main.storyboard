@@ -250,22 +250,6 @@
             </objects>
             <point key="canvasLocation" x="-2491" y="-119"/>
         </scene>
-        <!--Profile-->
-        <scene sceneID="KHi-Y7-fFQ">
-            <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="NTw-G0-UGc" userLabel="Profile" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="e6l-xI-K9y">
-                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="dK2-Mu-pj0"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="tabProfileActive" id="4or-aT-roe"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ajj-uQ-tpI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="64" y="751"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="6MO-BR-fh4">
             <objects>
@@ -291,7 +275,6 @@
         <image name="backwardButton" width="24" height="24"/>
         <image name="shareButton" width="51" height="51"/>
         <image name="tabEditorialActive" width="30" height="30"/>
-        <image name="tabProfileActive" width="30" height="30"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

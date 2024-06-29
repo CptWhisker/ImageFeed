@@ -35,4 +35,6 @@ enum Icons {
     static let logoutButton = "logoutButton"
     static let buttonActivated = "buttonActivated"
     static let buttonDeactivated = "buttonDeactivated"
+    static let tabProfileActive = "tabProfileActive"
+    static let tabEditorialActive = "tabEditorialActive"
 }
