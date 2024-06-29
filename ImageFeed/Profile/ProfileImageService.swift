@@ -35,7 +35,7 @@ final class ProfileImageService {
         return request
     }
     
-    func fetchProfileImageURL(username: String, completion: @escaping (Result<String,Error>) -> Void) {
+    func fetchProfileImageURL(username: String) {
         assert(Thread.isMainThread)
         
         networkClient.task?.cancel()
@@ -48,11 +48,14 @@ final class ProfileImageService {
         networkClient.fetch(request: request) { (result: Result<ProfileImageResponseBody, Error>) in
             switch result {
             case .success(let profileImageResponse):
-                 let profileURL = profileImageResponse.profileImage.small
-                 completion(.success(profileURL))
+                 let profileURL = profileImageResponse.profileImage.large
+                self.profileImage = profileURL
+                
+                NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
+                                                object: nil,
+                                                userInfo: ["URL": profileURL])
             case .failure(let error):
                 print("[ProfileImageService fetchProfileImageURL]: \(error.localizedDescription) - Error while fetching profile image URL")
-                completion(.failure(error))
             }
         }
     }

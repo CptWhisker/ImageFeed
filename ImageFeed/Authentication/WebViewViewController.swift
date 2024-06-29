@@ -85,7 +85,6 @@ final class WebViewViewController: UIViewController {
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        print("We are inside code func")
         if
             let url = navigationAction.request.url,
             let urlComponents = URLComponents(string: url.absoluteString),
@@ -95,7 +94,6 @@ final class WebViewViewController: UIViewController {
         {
             return codeItem.value
         } else {
-            print("Unable to retrieve code from URL: \(navigationAction.request.url?.absoluteString ?? "No URL")")
             return nil
         }
     }
@@ -113,8 +111,6 @@ extension WebViewViewController: WKNavigationDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-        print("Nav action: \(navigationAction)")
-        print("Nav action URL: \(navigationAction.request.url?.absoluteString ?? "No URL")")
         if let code = code(from: navigationAction) {
             delegate?.webViewViewControllerDidAuthenticateWithCode(self, code: code)
             decisionHandler(.cancel)

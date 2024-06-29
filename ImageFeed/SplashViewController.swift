@@ -98,31 +98,16 @@ extension SplashViewController: AuthViewControllerDelegate {
 // MARK: - LoadProfile
 extension SplashViewController {
     private func loadProfile() {
-        UIBlockingProgressHUD.showAnimation()
+//        UIBlockingProgressHUD.showAnimation()
         
         profileService.fetchProfile { [weak self] result in
             guard let self else { return }
             
-            UIBlockingProgressHUD.dismissAnimation()
+//            UIBlockingProgressHUD.dismissAnimation()
             
             switch result {
             case .success(let profile):
-                profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] result in
-                    guard let self else { return }
-                    
-                    switch result {
-                    case .success(let image):
-                        NotificationCenter.default.post(
-                            name: ProfileImageService.didChangeNotification,
-                            object: self,
-                            userInfo: ["URL": image]
-                        )
-                        
-                        self.profileImageService.profileImage = image
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
+                profileImageService.fetchProfileImageURL(username: profile.username)
                 
                 self.loadedProfile = profile
                 self.switchToTabBarController()

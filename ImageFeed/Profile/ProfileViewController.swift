@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     // MARK: - Variables
@@ -63,6 +64,7 @@ final class ProfileViewController: UIViewController {
             [weak self] _ in
             guard let self else { return }
             
+            print("Updating from NotificationCenter")
             self.updateAvatar()
         }
         
@@ -132,12 +134,17 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatar() {
         guard
-            let profileImageURL = profileImageService.profileImage,
-            let url = URL(string: profileImageURL)
-        else { return }
+            let profileImageURLPath = profileImageService.profileImage,
+            let profileImageURL = URL(string: profileImageURLPath)
+        else {
+            print("No avatar")
+            return
+        }
         
-        print("Updating avatar...")
-        // TODO: Update avatar
+        let cornerRadius = RoundCornerImageProcessor(cornerRadius: 61)
+        profilePictureImage.kf.setImage(with: profileImageURL,
+                                        placeholder: UIImage(named: Icons.profilePictureStub),
+                                        options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
     }
     
     func setProfile(_ profile: Profile) {

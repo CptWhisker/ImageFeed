@@ -1,16 +1,24 @@
 import Foundation
+import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
     // MARK: - Properties
     static let shared = OAuth2TokenStorage()
-    private let userDefaults = UserDefaults.standard
+    private let keyChain = KeychainWrapper.standard
+    private let key = "accessToken"
     var bearerToken: String? {
         get {
-            return userDefaults.string(forKey: "accessToken")
+            return keyChain.string(forKey: key)
         }
         
         set {
-            userDefaults.setValue(newValue, forKey: "accessToken")
+            if let token = newValue {
+                let isSuccess = keyChain.set(token, forKey: key)
+                guard isSuccess else {
+                    print("[OAuth2TokenStorage set]: KeyChain error - Unable to save access token")
+                    return
+                }
+            }
         }
     }
 }
