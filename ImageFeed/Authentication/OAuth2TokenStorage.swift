@@ -18,6 +18,8 @@ final class OAuth2TokenStorage {
                     print("[OAuth2TokenStorage set]: KeyChain error - Unable to save access token")
                     return
                 }
+            } else {
+                keyChain.removeObject(forKey: key)
             }
         }
     }

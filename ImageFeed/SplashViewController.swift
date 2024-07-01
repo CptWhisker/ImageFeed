@@ -30,7 +30,7 @@ final class SplashViewController: UIViewController {
         if storage.bearerToken != nil {
             loadProfile()
         } else {
-            performSegue(withIdentifier: segueDestinations.authSegue, sender: self)
+            loadAuthViewController()
         }
     }
     
@@ -68,43 +68,28 @@ final class SplashViewController: UIViewController {
         
         window.rootViewController = tabBarViewController
     }
-}
-
-// MARK: - Navigation
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.authSegue {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let authViewController = navigationController.viewControllers.first as? AuthViewController else {
-                assertionFailure("Failed to prepare for \(segueDestinations.authSegue) segue")
-                return
-            }
-            authViewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
+    
+    private func loadAuthViewController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            assertionFailure("Failed to instantiate AuthViewController from storyboard")
+            return
         }
-    }
-}
 
-// MARK: - AuthViewControllerDelegate
-extension SplashViewController: AuthViewControllerDelegate {
-    func didAuthenticate(vc: AuthViewController) {
-        guard storage.bearerToken != nil else { return }
-        
-        loadProfile()
+        authViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
     }
-}
-
-// MARK: - LoadProfile
-extension SplashViewController {
+    
     private func loadProfile() {
-//        UIBlockingProgressHUD.showAnimation()
+        UIBlockingProgressHUD.showAnimation()
         
         profileService.fetchProfile { [weak self] result in
             guard let self else { return }
             
-//            UIBlockingProgressHUD.dismissAnimation()
-            
+            UIBlockingProgressHUD.dismissAnimation()
+                        
             switch result {
             case .success(let profile):
                 profileImageService.fetchProfileImageURL(username: profile.username)
@@ -115,5 +100,14 @@ extension SplashViewController {
                 print(error.localizedDescription)
             }
         }
+    }
+}
+
+// MARK: - AuthViewControllerDelegate
+extension SplashViewController: AuthViewControllerDelegate {
+    func didAuthenticate(vc: AuthViewController) {
+        guard storage.bearerToken != nil else { return }
+        
+        loadProfile()
     }
 }
