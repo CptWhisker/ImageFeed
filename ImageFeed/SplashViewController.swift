@@ -50,6 +50,7 @@ final class SplashViewController: UIViewController {
         ])
     }
     
+    // MARK: - Navigation
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -82,6 +83,7 @@ final class SplashViewController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
     
+    //MARK: - Loading Data
     private func loadProfile() {
         UIBlockingProgressHUD.showAnimation()
         

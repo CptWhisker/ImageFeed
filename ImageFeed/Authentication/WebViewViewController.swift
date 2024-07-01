@@ -62,6 +62,7 @@ final class WebViewViewController: UIViewController {
         ])
     }
     
+    // MARK: - Loading Data
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
             print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
@@ -98,6 +99,7 @@ final class WebViewViewController: UIViewController {
         }
     }
     
+    //MARK: - KVO
     private func updateProgress() {
         loadingBar.progress = Float(webView.estimatedProgress)
         loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001

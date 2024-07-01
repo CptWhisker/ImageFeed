@@ -1,6 +1,7 @@
 import UIKit
 
 final class ProfileService {
+    // MARK: - Properties
     static let shared = ProfileService()
     private let accessToken: String?
     private lazy var networkClient: NetworkClient = {
@@ -16,6 +17,7 @@ final class ProfileService {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
 
+    // MARK: Private Functions
     private func generateURLRequest() -> URLRequest? {
         guard let accessToken else {
             print("[ProfileService generateURLRequest]: accessTokenError - Missing access token")
@@ -33,6 +35,7 @@ final class ProfileService {
         return request
     }
     
+    // MARK: - Public Functions
     func fetchProfile(completion: @escaping (Result<Profile,Error>) -> Void) {
         assert(Thread.isMainThread)
         

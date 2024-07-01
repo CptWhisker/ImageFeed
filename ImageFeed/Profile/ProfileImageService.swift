@@ -1,6 +1,7 @@
 import UIKit
 
 final class ProfileImageService {
+    // MARK: - Properties
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private let accessToken: String?
@@ -18,6 +19,7 @@ final class ProfileImageService {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
     
+    // MARK: - Private Functions
     private func generateURLRequest(username: String) -> URLRequest? {
         guard let accessToken else {
             print("[ProfileImageService generateURLRequest]: accessTokenError - Missing access token")
@@ -35,6 +37,7 @@ final class ProfileImageService {
         return request
     }
     
+    // MARK: - Public Functions
     func fetchProfileImageURL(username: String) {
         assert(Thread.isMainThread)
         

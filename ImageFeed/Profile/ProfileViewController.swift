@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 
 final class ProfileViewController: UIViewController {
-    // MARK: - Variables
+    // MARK: - Properties
     private lazy var profilePictureImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.profilePictureStub))
         imageView.tintColor = .ypGray
@@ -147,6 +147,7 @@ final class ProfileViewController: UIViewController {
                                         options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
     }
     
+    // MARK: - Public Functions
     func setProfile(_ profile: Profile) {
         self.profile = profile
     }
