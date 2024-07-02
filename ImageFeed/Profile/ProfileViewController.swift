@@ -73,6 +73,7 @@ final class ProfileViewController: UIViewController {
     
     // MARK: Private Functions
     private func configureInterface() {
+        view.backgroundColor = .ypBlack
         configureProfilePictureImage()
         configureLogoutButton()
         configureNameLabel()

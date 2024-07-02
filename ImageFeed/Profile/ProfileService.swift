@@ -51,8 +51,8 @@ final class ProfileService {
             case .success(let profileResponse):
                 let profile = Profile(
                     username: "@\(profileResponse.username)",
-                    name: "\(profileResponse.firstName) \(profileResponse.lastName)",
-                    bio: profileResponse.bio
+                    name: "\(profileResponse.firstName) \(profileResponse.lastName ?? "")",
+                    bio: profileResponse.bio ?? ""
                 )
                 
                 completion(.success(profile))

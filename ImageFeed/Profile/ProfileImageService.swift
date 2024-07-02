@@ -48,7 +48,9 @@ final class ProfileImageService {
             return
         }
         
-        networkClient.fetch(request: request) { (result: Result<ProfileImageResponseBody, Error>) in
+        networkClient.fetch(request: request) { [weak self] (result: Result<ProfileImageResponseBody, Error>) in
+            guard let self else { return }
+            
             switch result {
             case .success(let profileImageResponse):
                  let profileURL = profileImageResponse.profileImage.large
