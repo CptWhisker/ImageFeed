@@ -8,7 +8,14 @@ final class SplashViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    private lazy var profileService: ProfileService = {
+        return ProfileService.shared
+    }()
+    private lazy var profileImageService: ProfileImageService = {
+        return ProfileImageService.shared
+    }()
     private let storage = OAuth2TokenStorage.shared
+    private var loadedProfile: Profile?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -21,9 +28,9 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(animated)
         
         if storage.bearerToken != nil {
-            switchToTabBarController()
+            loadProfile()
         } else {
-            performSegue(withIdentifier: segueDestinations.authSegue, sender: self)
+            loadAuthViewController()
         }
     }
     
@@ -43,6 +50,7 @@ final class SplashViewController: UIViewController {
         ])
     }
     
+    // MARK: - Navigation
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -51,22 +59,48 @@ final class SplashViewController: UIViewController {
         
         let tabBarViewController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
         
+        if let tabBarController = tabBarViewController as? UITabBarController,
+           let viewController = tabBarController.viewControllers?.first(where: { $0 is ProfileViewController }) as? ProfileViewController,
+           let loadedProfile {
+            viewController.setProfile(loadedProfile)
+        } else {
+            print("[SplashViewController switchToTabBarController]: Naviagtion error - ProfileViewController not found")
+        }
+        
         window.rootViewController = tabBarViewController
     }
-}
+    
+    private func loadAuthViewController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            assertionFailure("Failed to instantiate AuthViewController from storyboard")
+            return
+        }
 
-// MARK: - Navigation
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.authSegue {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let authViewController = navigationController.viewControllers.first as? AuthViewController else {
-                assertionFailure("Failed to prepare for \(segueDestinations.authSegue) segue")
-                return
+        authViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
+    }
+    
+    //MARK: - Loading Data
+    private func loadProfile() {
+        UIBlockingProgressHUD.showAnimation()
+        
+        profileService.fetchProfile { [weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.dismissAnimation()
+                        
+            switch result {
+            case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username)
+                
+                self.loadedProfile = profile
+                self.switchToTabBarController()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
-            authViewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
         }
     }
 }
@@ -74,6 +108,8 @@ extension SplashViewController {
 // MARK: - AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(vc: AuthViewController) {
-        switchToTabBarController()
+        guard storage.bearerToken != nil else { return }
+        
+        loadProfile()
     }
 }

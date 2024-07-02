@@ -1,7 +1,8 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
-// MARK: - Variables
+    // MARK: - Properties
     private lazy var profilePictureImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.profilePictureStub))
         imageView.tintColor = .ypGray
@@ -17,7 +18,7 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Aleksandr Moskovtsev"
+        label.text = profile?.name
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         label.textColor = .ypWhite
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +26,7 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var socialMediaLabel: UILabel = {
         let label = UILabel()
-        label.text = "@cpt_whisker"
+        label.text = profile?.username
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .ypGray
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,22 +34,46 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var profileStatusLabel: UILabel = {
         let label = UILabel()
-        label.text = "Haters gonna hate"
+        label.text = profile?.bio
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .ypWhite
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    private lazy var profileService: ProfileService = {
+        return ProfileService.shared
+    }()
+    private lazy var profileImageService: ProfileImageService = {
+        return ProfileImageService.shared
+    }()
     
-// MARK: - Lifecycle
+    private var profile: Profile?
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureInterface()
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) {
+            [weak self] _ in
+            guard let self else { return }
+            
+            print("Updating from NotificationCenter")
+            self.updateAvatar()
+        }
+        
+        updateAvatar()
     }
     
-// MARK: Private Functions
+    // MARK: Private Functions
     private func configureInterface() {
+        view.backgroundColor = .ypBlack
         configureProfilePictureImage()
         configureLogoutButton()
         configureNameLabel()
@@ -106,5 +131,25 @@ final class ProfileViewController: UIViewController {
             profileStatusLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             profileStatusLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16)
         ])
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURLPath = profileImageService.profileImage,
+            let profileImageURL = URL(string: profileImageURLPath)
+        else {
+            print("No avatar")
+            return
+        }
+        
+        let cornerRadius = RoundCornerImageProcessor(cornerRadius: 61)
+        profilePictureImage.kf.setImage(with: profileImageURL,
+                                        placeholder: UIImage(named: Icons.profilePictureStub),
+                                        options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+    }
+    
+    // MARK: - Public Functions
+    func setProfile(_ profile: Profile) {
+        self.profile = profile
     }
 }

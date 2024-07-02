@@ -15,6 +15,7 @@ final class WebViewViewController: UIViewController {
         progressView.translatesAutoresizingMaskIntoConstraints = false
         return progressView
     }()
+    private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
     
     // MARK: - Lifecycle
@@ -25,17 +26,12 @@ final class WebViewViewController: UIViewController {
         
         configureInterface()
         loadAuthView()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-        updateProgress()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+        
+        estimatedProgressObservation = webView.observe(\.estimatedProgress, options: []) { [weak self] _, _ in
+            guard let self else { return }
+            
+            self.updateProgress()
+        }
     }
     
     // MARK: - Configuration
@@ -66,6 +62,7 @@ final class WebViewViewController: UIViewController {
         ])
     }
     
+    // MARK: - Loading Data
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
             print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
@@ -98,27 +95,14 @@ final class WebViewViewController: UIViewController {
         {
             return codeItem.value
         } else {
-            print("Unable to retrieve code")
             return nil
         }
     }
     
+    //MARK: - KVO
     private func updateProgress() {
         loadingBar.progress = Float(webView.estimatedProgress)
         loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-    }
-    
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
 }
 
