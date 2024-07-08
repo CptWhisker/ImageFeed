@@ -8,6 +8,7 @@ final class NetworkClient: NetworkRouting {
     private lazy var decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
         return decoder
     }()
     var task: URLSessionTask?
