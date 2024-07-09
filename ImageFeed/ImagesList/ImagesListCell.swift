@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
@@ -10,6 +11,12 @@ final class ImagesListCell: UITableViewCell {
         didSet {
             setupDateGradientLayer()
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        cellImage.kf.cancelDownloadTask()
     }
     
     private func setupDateGradientLayer() {

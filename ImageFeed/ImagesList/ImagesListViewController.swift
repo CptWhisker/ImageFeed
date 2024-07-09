@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
@@ -26,17 +27,35 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Private Functions
     
+//    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+//        guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
+//            cell.cellImage.image = nil
+//            return
+//        }
+//        cell.cellImage.image = cellImage
+//        
+//        cell.dateLabel.text = dateFormatter.string(from: currentDate)
+//        
+//        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: Icons.buttonActivated) : UIImage(named: Icons.buttonDeactivated)
+//        cell.likeButton.setImage(cellLikeIcon, for: .normal)
+//    }
+    
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
-            cell.cellImage.image = nil
+        let imageURLPath = photos[indexPath.row].thumbImageURL
+        guard let imageURL = URL(string: imageURLPath)
+        else {
+            print("[ImagesListViewController] - Error while creating URL from string")
             return
         }
-        cell.cellImage.image = cellImage
         
-        cell.dateLabel.text = dateFormatter.string(from: currentDate)
+        let cornerRadius = RoundCornerImageProcessor(cornerRadius: 16)
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(with: imageURL,
+                                   placeholder: UIImage(named: Icons.imageStub),
+                                   options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
         
-        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: Icons.buttonActivated) : UIImage(named: Icons.buttonDeactivated)
-        cell.likeButton.setImage(cellLikeIcon, for: .normal)
+        cell.dateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
+        cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
     }
     
     private func checkResourcesAvaliability() {
@@ -101,7 +120,7 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -128,13 +147,11 @@ extension ImagesListViewController: UITableViewDelegate {
         let horizontalInset: CGFloat = 16
         let verticalInset: CGFloat = 4
         
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return 200
-        }
+        let photo = photos[indexPath.row]
         
         let imageViewWidth = tableView.bounds.width - ( 2 * horizontalInset )
-        let targetScale = imageViewWidth / image.size.width
-        let cellHeight = ( image.size.height * targetScale ) + ( 2 * verticalInset )
+        let targetScale = imageViewWidth / photo.size.width
+        let cellHeight = ( photo.size.height * targetScale ) + ( 2 * verticalInset )
         
         return cellHeight
     }
