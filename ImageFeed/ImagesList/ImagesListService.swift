@@ -1,6 +1,7 @@
 import UIKit
 
 final class ImagesListService {
+    static let shared = ImagesListService()
     private var lastLoadedPage: Int?
     private(set) var photos: [Photo] = []
     private lazy var networkClient: NetworkClient = {
@@ -69,11 +70,10 @@ final class ImagesListService {
                     )
                     
                     self.photos.append(image)
-                    NotificationCenter.default.post(
-                        name: ImagesListService.didChangeNotification,
-                        object: nil,
-                        userInfo: ["URL": image.thumbImageURL])
                 }
+                NotificationCenter.default.post(
+                    name: ImagesListService.didChangeNotification,
+                    object: nil)
                 
                 self.lastLoadedPage = nextPage
             case.failure(let error):

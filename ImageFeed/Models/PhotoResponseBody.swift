@@ -5,7 +5,7 @@ struct PhotoResponseBody: Decodable {
     let createdAt: Date?
     let width: Int
     let height: Int
-    let description: String
+    let description: String?
     let urls: PhotoURLs
     let likedByUser: Bool
     
