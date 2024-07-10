@@ -63,7 +63,9 @@ final class ImagesListViewController: UIViewController {
             guard let self else { return }
             
             cell.cellImage.contentMode = .scaleAspectFit
-            cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
+            cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated), for: .normal)
+            cell.likeButton.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
+            cell.likeButton.tag = indexPath.row
             cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
             cell.setupDateGradientLayer()
         }
@@ -124,6 +126,16 @@ final class ImagesListViewController: UIViewController {
                 tableView.insertRows(at: indexPaths, with: .automatic)
             } completion: { _ in }
         }
+    }
+    
+    @objc private func didTapLikeButton(_ sender: UIButton) {
+        let row = sender.tag
+        let isLiked = photos[row].isLiked
+        
+        photos[row].isLiked.toggle()
+        
+        let toggledImage = isLiked ? Icons.buttonDeactivated : Icons.buttonActivated
+        sender.setImage(UIImage(named: toggledImage), for: .normal)
     }
 }
 
