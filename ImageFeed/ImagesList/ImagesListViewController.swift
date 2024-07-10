@@ -65,6 +65,7 @@ final class ImagesListViewController: UIViewController {
             cell.cellImage.contentMode = .scaleAspectFit
             cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
             cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
+            cell.setupDateGradientLayer()
         }
     }
     
