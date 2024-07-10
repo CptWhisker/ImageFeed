@@ -49,16 +49,19 @@ final class ImagesListViewController: UIViewController {
             return
         }
         
-        let cornerRadius = RoundCornerImageProcessor(cornerRadius: 16)
+        cell.cellImage.backgroundColor = .ypGray
+        cell.cellImage.contentMode = .center
+        
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
             with: imageURL,
             placeholder: UIImage(named: Icons.imageStub),
             options: [
-                .processor(cornerRadius),
                 .cacheSerializer(FormatIndicatedCacheSerializer.png)
             ]
-        )
+        ) { _ in
+            cell.cellImage.contentMode = .scaleAspectFit
+        }
         
         cell.dateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
         cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
