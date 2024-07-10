@@ -14,6 +14,7 @@ final class ImagesListViewController: UIViewController {
     }()
     private var photos: [Photo] = []
     private let imagesListService = ImagesListService.shared
+    private var imageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
     
@@ -23,23 +24,23 @@ final class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
         checkResourcesAvaliability()
+        
+        imageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) {
+            [weak self] _ in
+            guard let self else { return }
+            
+            print("Updating photos from NotificationCenter")
+            self.updateTableViewAnimated()
+        }
+        
+        imagesListService.fetchPhotosNextPage()
     }
     
     // MARK: - Private Functions
-    
-//    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-//        guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
-//            cell.cellImage.image = nil
-//            return
-//        }
-//        cell.cellImage.image = cellImage
-//        
-//        cell.dateLabel.text = dateFormatter.string(from: currentDate)
-//        
-//        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: Icons.buttonActivated) : UIImage(named: Icons.buttonDeactivated)
-//        cell.likeButton.setImage(cellLikeIcon, for: .normal)
-//    }
-    
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageURLPath = photos[indexPath.row].thumbImageURL
         guard let imageURL = URL(string: imageURLPath)
@@ -50,9 +51,14 @@ final class ImagesListViewController: UIViewController {
         
         let cornerRadius = RoundCornerImageProcessor(cornerRadius: 16)
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: imageURL,
-                                   placeholder: UIImage(named: Icons.imageStub),
-                                   options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+        cell.cellImage.kf.setImage(
+            with: imageURL,
+            placeholder: UIImage(named: Icons.imageStub),
+            options: [
+                .processor(cornerRadius),
+                .cacheSerializer(FormatIndicatedCacheSerializer.png)
+            ]
+        )
         
         cell.dateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
         cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
@@ -154,5 +160,11 @@ extension ImagesListViewController: UITableViewDelegate {
         let cellHeight = ( photo.size.height * targetScale ) + ( 2 * verticalInset )
         
         return cellHeight
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == photos.count - 1 {
+            imagesListService.fetchPhotosNextPage()
+        }
     }
 }
