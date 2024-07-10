@@ -59,12 +59,13 @@ final class ImagesListViewController: UIViewController {
             options: [
                 .cacheSerializer(FormatIndicatedCacheSerializer.png)
             ]
-        ) { _ in
+        ) { [weak self] _ in
+            guard let self else { return }
+            
             cell.cellImage.contentMode = .scaleAspectFit
             cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
+            cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
         }
-        
-        cell.dateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
     }
     
     private func checkResourcesAvaliability() {

@@ -6,12 +6,12 @@ final class ImagesListCell: UITableViewCell {
     
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var dateGradientView: UIView! {
+    @IBOutlet weak var dateLabel: UILabel! {
         didSet {
             setupDateGradientLayer()
         }
     }
+    @IBOutlet weak var dateGradientView: UIView!
     
     override func prepareForReuse() {
         super.prepareForReuse()
