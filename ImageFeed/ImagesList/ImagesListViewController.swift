@@ -61,10 +61,10 @@ final class ImagesListViewController: UIViewController {
             ]
         ) { _ in
             cell.cellImage.contentMode = .scaleAspectFit
+            cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
         }
         
         cell.dateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
-        cell.likeButton.setImage(UIImage(named: Icons.buttonDeactivated), for: .normal)
     }
     
     private func checkResourcesAvaliability() {
