@@ -1,5 +1,6 @@
 import UIKit
 import Kingfisher
+import ProgressHUD
 
 final class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
@@ -133,6 +134,8 @@ final class ImagesListViewController: UIViewController {
         let photo = photos[row]
         let isLiked = photo.isLiked
         
+        UIBlockingProgressHUD.showAnimation()
+        
         imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
             guard let self else { return }
             
@@ -149,9 +152,13 @@ final class ImagesListViewController: UIViewController {
                         Icons.buttonDeactivated
                         
                         sender.setImage(UIImage(named: toggledImage), for: .normal)
+                        
+                        UIBlockingProgressHUD.dismissAnimation()
                     }
                 }
             case .failure(let error):
+                UIBlockingProgressHUD.dismissAnimation()
+                
                 print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
             }
         }
@@ -159,7 +166,6 @@ final class ImagesListViewController: UIViewController {
 }
 
 // MARK: - DataSource
-
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photos.count
@@ -178,8 +184,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - Delegate
-
+// MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: segueDestinations.singleImageSegue, sender: indexPath)
