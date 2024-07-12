@@ -63,7 +63,7 @@ final class ImagesListViewController: UIViewController {
             guard let self else { return }
             
             cell.cellImage.contentMode = .scaleAspectFit
-            cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated), for: .normal)
+            cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated ), for: .normal)
             cell.likeButton.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
             cell.likeButton.tag = indexPath.row
             cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
@@ -130,12 +130,31 @@ final class ImagesListViewController: UIViewController {
     
     @objc private func didTapLikeButton(_ sender: UIButton) {
         let row = sender.tag
-        let isLiked = photos[row].isLiked
+        let photo = photos[row]
+        let isLiked = photo.isLiked
         
-        photos[row].isLiked.toggle()
-        
-        let toggledImage = isLiked ? Icons.buttonDeactivated : Icons.buttonActivated
-        sender.setImage(UIImage(named: toggledImage), for: .normal)
+        imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success:
+                if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
+                    DispatchQueue.main.async {
+                        print("Changing Like BVutton")
+                        
+                        self.photos[index].isLiked.toggle()
+                        
+                        let toggledImage = self.photos[index].isLiked ?
+                        Icons.buttonActivated :
+                        Icons.buttonDeactivated
+                        
+                        sender.setImage(UIImage(named: toggledImage), for: .normal)
+                    }
+                }
+            case .failure(let error):
+                print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
+            }
+        }
     }
 }
 

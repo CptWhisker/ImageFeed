@@ -41,6 +41,25 @@ final class ImagesListService {
         return request
     }
     
+    private func generateLikeURLRequest(photoID: String, isLiked: Bool) -> URLRequest? {
+        guard let accessToken else {
+            print("[ImagesListService generateURLRequest]: accessTokenError - Missing access token")
+            return nil
+        }
+        
+        let method = isLiked ? "DELETE" : "POST"
+        
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/photos/\(photoID)/like") else {
+            print("[ImagesListService generateLikeURLRequest]: urlRequestError - Unable to create Like URL from string")
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+    
     func fetchPhotosNextPage() {
         let nextPage = (lastLoadedPage ?? 0) + 1
         
@@ -77,7 +96,28 @@ final class ImagesListService {
                 
                 self.lastLoadedPage = nextPage
             case.failure(let error):
-                print("[ProfileService fetchProfile]: \(error.localizedDescription) - Error while fetching profile")
+                print("[ImagesListService fetchPhotosNextPage]: \(error.localizedDescription) - Error while fetching photos from page \(nextPage)")
+            }
+        }
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        assert(Thread.isMainThread)
+        
+        networkClient.task?.cancel()
+        
+        guard let request = generateLikeURLRequest(photoID: photoId, isLiked: isLike) else {
+            print("[ImagesListService changeLike]: urlRequestError - Unable to generate Like URLRequest")
+            return
+        }
+        
+        networkClient.fetch(request: request) { (result: Result<LikePhotoResponse, Error>)  in
+            switch result {
+            case .success:
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }

@@ -1,5 +1,9 @@
 import Foundation
 
+struct LikePhotoResponse: Decodable {
+    let photo: PhotoResponseBody
+}
+
 struct PhotoResponseBody: Decodable {
     let id: String
     let createdAt: Date?
