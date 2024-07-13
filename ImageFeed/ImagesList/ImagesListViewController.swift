@@ -5,7 +5,6 @@ import ProgressHUD
 final class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private let currentDate = Date()
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -23,8 +22,6 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        
-        checkResourcesAvaliability()
         
         imageServiceObserver = NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
@@ -69,30 +66,6 @@ final class ImagesListViewController: UIViewController {
             cell.likeButton.tag = indexPath.row
             cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
             cell.setupDateGradientLayer()
-        }
-    }
-    
-    private func checkResourcesAvaliability() {
-        var imageErrors = 0
-        
-        for photoName in photosName {
-            if UIImage(named: photoName) == nil {
-                imageErrors += 1
-            }
-        }
-        
-        if imageErrors == photosName.count {
-            print("Image Loading Error: Failed to load images from resources")
-        } else if imageErrors > 0 {
-            print("Image Loading Error: Failed to load one or more images from resources")
-        }
-        
-        if UIImage(named: Icons.buttonActivated) == nil || UIImage(named: Icons.buttonDeactivated) == nil {
-            print("Image Loading Error: Failed to load one or more icons from resources")
-        }
-        
-        if imageErrors > 0 {
-            print("Cell Configuration Error: Failed to configure dynamic cell height")
         }
     }
     
