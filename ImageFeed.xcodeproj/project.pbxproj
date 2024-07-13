@@ -21,6 +21,7 @@
 		CEA1C4472C348221003DDA40 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA1C4462C348221003DDA40 /* ImagesListService.swift */; };
 		CEA1C4492C34828C003DDA40 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA1C4482C34828C003DDA40 /* Photo.swift */; };
 		CEA1C44B2C368DC0003DDA40 /* PhotoResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA1C44A2C368DBF003DDA40 /* PhotoResponseBody.swift */; };
+		CEA1C45C2C42851E003DDA40 /* ProfileLogoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA1C45B2C42851E003DDA40 /* ProfileLogoutService.swift */; };
 		CEF061072C11004E00CF0562 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061062C11004E00CF0562 /* Constants.swift */; };
 		CEF0610A2C121B5A00CF0562 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061092C121B5A00CF0562 /* AuthViewController.swift */; };
 		CEF0610C2C12497C00CF0562 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0610B2C12497C00CF0562 /* WebViewViewController.swift */; };
@@ -31,7 +32,6 @@
 		CEF061182C178B8000CF0562 /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061172C178B8000CF0562 /* OAuthTokenResponseBody.swift */; };
 		CEF0611A2C178D8200CF0562 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061192C178D8200CF0562 /* OAuth2TokenStorage.swift */; };
 		CEF0611C2C1A38D400CF0562 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0611B2C1A38D400CF0562 /* SplashViewController.swift */; };
-		CEF0611E2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */; };
 		CEF061262C1DA9B100CF0562 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = CEF061252C1DA9B100CF0562 /* ProgressHUD */; };
 		CEF061282C1DB15000CF0562 /* AuthServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF061272C1DB15000CF0562 /* AuthServiceError.swift */; };
 		CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF0612A2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift */; };
@@ -70,6 +70,7 @@
 		CEA1C4482C34828C003DDA40 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		CEA1C44A2C368DBF003DDA40 /* PhotoResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResponseBody.swift; sourceTree = "<group>"; };
 		CEA1C4502C3C51DC003DDA40 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEA1C45B2C42851E003DDA40 /* ProfileLogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLogoutService.swift; sourceTree = "<group>"; };
 		CEF061062C11004E00CF0562 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		CEF061092C121B5A00CF0562 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		CEF0610B2C12497C00CF0562 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -80,7 +81,6 @@
 		CEF061172C178B8000CF0562 /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
 		CEF061192C178D8200CF0562 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		CEF0611B2C1A38D400CF0562 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
-		CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewControllerDelegate.swift; sourceTree = "<group>"; };
 		CEF061272C1DB15000CF0562 /* AuthServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceError.swift; sourceTree = "<group>"; };
 		CEF0612A2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
@@ -167,6 +167,7 @@
 				CE914AAE2C04E85900525E75 /* ProfileViewController.swift */,
 				CEF0612C2C1E07BA00CF0562 /* ProfileService.swift */,
 				CEF061322C2C7CE900CF0562 /* ProfileImageService.swift */,
+				CEA1C45B2C42851E003DDA40 /* ProfileLogoutService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -213,7 +214,6 @@
 			isa = PBXGroup;
 			children = (
 				CEF0610E2C14577400CF0562 /* WebViewViewControllerDelegate.swift */,
-				CEF0611D2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -360,7 +360,6 @@
 				CEF061132C15DDEC00CF0562 /* NetworkErrors.swift in Sources */,
 				CEF0610A2C121B5A00CF0562 /* AuthViewController.swift in Sources */,
 				CEA1C44B2C368DC0003DDA40 /* PhotoResponseBody.swift in Sources */,
-				CEF0611E2C1A3EAA00CF0562 /* AuthViewControllerDelegate.swift in Sources */,
 				CEF061072C11004E00CF0562 /* Constants.swift in Sources */,
 				CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */,
 				CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */,
@@ -374,6 +373,7 @@
 				CEF0611A2C178D8200CF0562 /* OAuth2TokenStorage.swift in Sources */,
 				CEF0610C2C12497C00CF0562 /* WebViewViewController.swift in Sources */,
 				CE6DA9512BE3FB4200D08293 /* SceneDelegate.swift in Sources */,
+				CEA1C45C2C42851E003DDA40 /* ProfileLogoutService.swift in Sources */,
 				CEF061312C1E09BE00CF0562 /* Profile.swift in Sources */,
 				CEF0612F2C1E097B00CF0562 /* ProfileResponseBody.swift in Sources */,
 				CEF0611C2C1A38D400CF0562 /* SplashViewController.swift in Sources */,

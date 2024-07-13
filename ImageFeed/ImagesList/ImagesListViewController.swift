@@ -14,6 +14,7 @@ final class ImagesListViewController: UIViewController {
     }()
     private var photos: [Photo] = []
     private let imagesListService = ImagesListService.shared
+    private let storage = OAuth2TokenStorage.shared
     private var imageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
@@ -35,7 +36,11 @@ final class ImagesListViewController: UIViewController {
             self.updateTableViewAnimated()
         }
         
-        imagesListService.fetchPhotosNextPage()
+        guard let accessToken = storage.bearerToken else {
+            print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
+            return
+        }
+        imagesListService.fetchPhotosNextPage(accessToken: accessToken)
     }
     
     // MARK: - Private Functions
@@ -177,7 +182,11 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == photos.count - 1 {
-            imagesListService.fetchPhotosNextPage()
+            guard let accessToken = storage.bearerToken else {
+                print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
+                return
+            }
+            imagesListService.fetchPhotosNextPage(accessToken: accessToken)
         }
     }
 }

@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: Icons.logoutButton), for: .normal)
         button.tintColor = .ypRed
+        button.addTarget(self, action: #selector(logout), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -45,6 +46,9 @@ final class ProfileViewController: UIViewController {
     }()
     private lazy var profileImageService: ProfileImageService = {
         return ProfileImageService.shared
+    }()
+    private lazy var profileLogoutService: ProfileLogoutService = {
+        return ProfileLogoutService.shared
     }()
     
     private var profile: Profile?
@@ -146,6 +150,10 @@ final class ProfileViewController: UIViewController {
         profilePictureImage.kf.setImage(with: profileImageURL,
                                         placeholder: UIImage(named: Icons.profilePictureStub),
                                         options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+    }
+    
+    @objc private func logout() {
+        profileLogoutService.logout()
     }
     
     // MARK: - Public Functions

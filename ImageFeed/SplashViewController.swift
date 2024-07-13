@@ -64,7 +64,7 @@ final class SplashViewController: UIViewController {
            let loadedProfile {
             viewController.setProfile(loadedProfile)
         } else {
-            print("[SplashViewController switchToTabBarController]: Naviagtion error - ProfileViewController not found")
+            print("[SplashViewController switchToTabBarController]: Navigation error - ProfileViewController not found")
         }
         
         window.rootViewController = tabBarViewController
@@ -77,7 +77,6 @@ final class SplashViewController: UIViewController {
             return
         }
 
-        authViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: authViewController)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
@@ -85,31 +84,28 @@ final class SplashViewController: UIViewController {
     
     //MARK: - Loading Data
     private func loadProfile() {
+        guard let accessToken = storage.bearerToken else {
+            print("[SplashViewController loadProfile]: accessTokenError - Missing access token")
+            return
+        }
+        
         UIBlockingProgressHUD.showAnimation()
         
-        profileService.fetchProfile { [weak self] result in
+        profileService.fetchProfile(accessToken: accessToken) { [weak self] result in
             guard let self else { return }
             
             UIBlockingProgressHUD.dismissAnimation()
                         
             switch result {
-            case .success(let profile):
-                profileImageService.fetchProfileImageURL(username: profile.username)
-                
-                self.loadedProfile = profile
+            case .success:
+                loadedProfile = ProfileService.shared.profile
+                guard let loadedProfile else { return }
+                profileImageService.fetchProfileImageURL(accessToken: accessToken, username: loadedProfile.username)
+
                 self.switchToTabBarController()
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
-    }
-}
-
-// MARK: - AuthViewControllerDelegate
-extension SplashViewController: AuthViewControllerDelegate {
-    func didAuthenticate(vc: AuthViewController) {
-        guard storage.bearerToken != nil else { return }
-        
-        loadProfile()
     }
 }

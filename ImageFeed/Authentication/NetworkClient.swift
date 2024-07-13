@@ -25,6 +25,8 @@ final class NetworkClient: NetworkRouting {
             }
         }
         
+        task?.cancel()
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
                 print("[NetworkClient fetch]: dataTaskError - \(error.localizedDescription), Request: \(request)")

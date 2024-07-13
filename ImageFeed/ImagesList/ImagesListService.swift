@@ -7,19 +7,14 @@ final class ImagesListService {
     private lazy var networkClient: NetworkClient = {
         return NetworkClient()
     }()
-    private let accessToken: String?
+    private var accessToken: String?
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     private init() {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
     
-    private func generateURLRequest(page: Int) -> URLRequest? {
-        guard let accessToken else {
-            print("[ImagesListService generateURLRequest]: accessTokenError - Missing access token")
-            return nil
-        }
-        
+    private func generateURLRequest(with accessToken: String, page: Int) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseURL)/photos") else {
             print("[ImagesListService generateURLRequest]: urlRequestError - Unable to create Photos URL from string")
             return nil
@@ -41,12 +36,7 @@ final class ImagesListService {
         return request
     }
     
-    private func generateLikeURLRequest(photoID: String, isLiked: Bool) -> URLRequest? {
-        guard let accessToken else {
-            print("[ImagesListService generateURLRequest]: accessTokenError - Missing access token")
-            return nil
-        }
-        
+    private func generateLikeURLRequest(with accessToken: String, photoID: String, isLiked: Bool) -> URLRequest? {
         let method = isLiked ? "DELETE" : "POST"
         
         guard let url = URL(string: "\(Constants.defaultBaseURL)/photos/\(photoID)/like") else {
@@ -60,14 +50,14 @@ final class ImagesListService {
         return request
     }
     
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(accessToken: String) {
         let nextPage = (lastLoadedPage ?? 0) + 1
         
         assert(Thread.isMainThread)
         
         networkClient.task?.cancel()
         
-        guard let request = generateURLRequest(page: nextPage) else {
+        guard let request = generateURLRequest(with: accessToken, page: nextPage) else {
             print("[ProfileService fetchProfile]: urlRequestError - Unable to generate Profile URLRequest")
             return
         }
@@ -107,7 +97,7 @@ final class ImagesListService {
         
         networkClient.task?.cancel()
         
-        guard let request = generateLikeURLRequest(photoID: photoId, isLiked: isLike) else {
+        guard let accessToken, let request = generateLikeURLRequest(with: accessToken, photoID: photoId, isLiked: isLike) else {
             print("[ImagesListService changeLike]: urlRequestError - Unable to generate Like URLRequest")
             return
         }
@@ -120,5 +110,11 @@ final class ImagesListService {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func clearLoadedData() {
+        photos = []
+        lastLoadedPage = nil
+        accessToken = nil
     }
 }

@@ -22,7 +22,6 @@ final class AuthViewController: UIViewController {
     }()
     private let tokenStorage = OAuth2TokenStorage.shared
     private let oauth2Service = OAuth2Service.shared
-    weak var delegate: AuthViewControllerDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -101,7 +100,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success(let oauthResponse):
                 self.tokenStorage.bearerToken = oauthResponse.accessToken
-                self.delegate?.didAuthenticate(vc: self)
                 self.dismiss(animated: true, completion: nil)
             case .failure(let error):
                 print("[AuthViewController webViewViewControllerDidAuthenticateWithCode]: \(error.localizedDescription)")
