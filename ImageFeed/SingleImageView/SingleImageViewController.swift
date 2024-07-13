@@ -1,4 +1,6 @@
 import UIKit
+import Kingfisher
+import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
 // MARK: - Variables and IBOutlets
@@ -10,6 +12,7 @@ final class SingleImageViewController: UIViewController {
             rescaleAndCenterImageInScrollView(image: image)
         }
     }
+    var fullImageString: String?
     
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var imageView: UIImageView!
@@ -22,14 +25,11 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        
-        rescaleAndCenterImageInScrollView(image: image)
+        guard let fullImageString else { return }
+        loadImage(with: fullImageString)
     }
     
-// MARK: Privatye Functions
+// MARK: Private Functions
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -54,6 +54,29 @@ final class SingleImageViewController: UIViewController {
         let vInset = max(0, (scrollViewSize.height - imageViewSize.height) / 2)
         
         scrollView.contentInset = UIEdgeInsets(top: vInset, left: hInset, bottom: vInset, right: hInset)
+    }
+    
+// MARK: - Public Functions
+    func loadImage(with imageString: String) {
+        guard let imageURL = URL(string: imageString) else {
+            print("[SingleImageViewController loadImage]: URLError - Error while creating URL from string")
+            return
+        }
+        
+        UIBlockingProgressHUD.showAnimation()
+        
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismissAnimation()
+            
+            guard let self else { return }
+            switch result {
+            case .success(let imageResult):
+                imageView.frame.size = imageResult.image.size
+                rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure(let error):
+                print("[SingleImageViewController loadImage]: KingfisherError - \(error.localizedDescription)")
+            }
+        }
     }
 
 // MARK: IBActions

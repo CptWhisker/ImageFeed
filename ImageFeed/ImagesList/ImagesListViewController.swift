@@ -46,7 +46,7 @@ final class ImagesListViewController: UIViewController {
         let imageURLPath = photos[indexPath.row].thumbImageURL
         guard let imageURL = URL(string: imageURLPath)
         else {
-            print("[ImagesListViewController] - Error while creating URL from string")
+            print("[ImagesListViewController configCell]: URLError - Error while creating URL from string")
             return
         }
         
@@ -106,8 +106,7 @@ final class ImagesListViewController: UIViewController {
                 return
             }
             
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
+            viewController.fullImageString = photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
