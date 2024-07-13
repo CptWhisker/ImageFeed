@@ -55,9 +55,8 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.contentInset = UIEdgeInsets(top: vInset, left: hInset, bottom: vInset, right: hInset)
     }
-    
-// MARK: - Public Functions
-    func loadImage(with imageString: String) {
+
+    private func loadImage(with imageString: String) {
         guard let imageURL = URL(string: imageString) else {
             print("[SingleImageViewController loadImage]: URLError - Error while creating URL from string")
             return
@@ -75,8 +74,22 @@ final class SingleImageViewController: UIViewController {
                 rescaleAndCenterImageInScrollView(image: imageResult.image)
             case .failure(let error):
                 print("[SingleImageViewController loadImage]: KingfisherError - \(error.localizedDescription)")
+                self.showError(imageString)
             }
         }
+    }
+    
+    private func showError(_ imageString: String) {
+        let alert = UIAlertController(title: "Что-то пошло не так", message: "Попробовать еще раз?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Не надо", style: .default) { _ in
+            alert.dismiss(animated: true)
+        })
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.loadImage(with: imageString)
+        })
+        
+        present(alert, animated: true, completion: nil)
     }
 
 // MARK: IBActions
