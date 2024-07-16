@@ -32,7 +32,6 @@ final class ImagesListViewController: UIViewController {
             [weak self] _ in
             guard let self else { return }
             
-            print("Updating photos from NotificationCenter")
             self.updateTableViewAnimated()
         }
         

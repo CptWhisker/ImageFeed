@@ -153,7 +153,14 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func logout() {
-        profileLogoutService.logout()
+        let alert = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self else { return }
+            
+            self.profileLogoutService.logout()
+        })
+        alert.addAction(UIAlertAction(title: "Нет", style: .default))
+        present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Public Functions
