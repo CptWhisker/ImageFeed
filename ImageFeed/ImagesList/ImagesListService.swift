@@ -1,6 +1,7 @@
 import UIKit
 
 final class ImagesListService {
+    // MARK: - Properties
     static let shared = ImagesListService()
     private var lastLoadedPage: Int?
     private(set) var photos: [Photo] = []
@@ -14,6 +15,7 @@ final class ImagesListService {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
     
+    // MARK: - Private Functions
     private func generateURLRequest(with accessToken: String, page: Int) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseURL)/photos") else {
             print("[ImagesListService generateURLRequest]: urlRequestError - Unable to create Photos URL from string")
@@ -50,6 +52,7 @@ final class ImagesListService {
         return request
     }
     
+    // MARK: - Public Functions
     func fetchPhotosNextPage(accessToken: String) {
         let nextPage = (lastLoadedPage ?? 0) + 1
         

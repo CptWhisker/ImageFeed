@@ -5,6 +5,7 @@ protocol NetworkRouting {
 }
 
 final class NetworkClient: NetworkRouting {
+    // MARK: - Properties
     private lazy var decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -14,6 +15,7 @@ final class NetworkClient: NetworkRouting {
     var task: URLSessionTask?
     var lastCode: String?
     
+    // MARK: - Public Functions
     func fetch<T: Decodable>(request:URLRequest, handler: @escaping (Result<T,Error>) -> Void) {
         let fullfillHandlerOnMainThread: (Result<T,Error>) -> Void = { result in
             DispatchQueue.main.async { [weak self] in

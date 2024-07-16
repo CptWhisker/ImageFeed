@@ -50,7 +50,6 @@ final class ProfileViewController: UIViewController {
     private lazy var profileLogoutService: ProfileLogoutService = {
         return ProfileLogoutService.shared
     }()
-    
     private var profile: Profile?
     private var profileImageServiceObserver: NSObjectProtocol?
     

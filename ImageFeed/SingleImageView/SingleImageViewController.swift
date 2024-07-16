@@ -3,7 +3,7 @@ import Kingfisher
 import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
-// MARK: - Variables and IBOutlets
+// MARK: - Properties
     var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else { return }
@@ -29,7 +29,7 @@ final class SingleImageViewController: UIViewController {
         loadImage(with: fullImageString)
     }
     
-// MARK: Private Functions
+// MARK: - Private Functions
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -92,7 +92,7 @@ final class SingleImageViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
-// MARK: IBActions
+// MARK: - IBActions
     @IBAction private func didTapBackwardButton(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }

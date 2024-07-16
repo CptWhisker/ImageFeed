@@ -12,13 +12,12 @@ final class ProfileService {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
+    var profile: Profile?
     
     private init() {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
     
-    var profile: Profile?
-
     // MARK: Private Functions
     private func generateURLRequest(with accessToken: String) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseURL)/me") else {

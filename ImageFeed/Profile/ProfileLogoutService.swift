@@ -2,19 +2,12 @@ import UIKit
 import WebKit
 
 final class ProfileLogoutService {
+    // MARK: - Properties
     static let shared = ProfileLogoutService()
     
     private init () {}
     
-    func logout() {
-        clearCookies()
-        clearProfileData()
-        clearImagesListData()
-        clearAccessToken()
-        
-        switchToSplashViewController()
-    }
-    
+    // MARK: - Private Functions
     private func clearCookies() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
@@ -52,5 +45,15 @@ final class ProfileLogoutService {
             animations: nil,
             completion: nil
         )
+    }
+    
+    // MARK: - Public Functions
+    func logout() {
+        clearCookies()
+        clearProfileData()
+        clearImagesListData()
+        clearAccessToken()
+        
+        switchToSplashViewController()
     }
 }

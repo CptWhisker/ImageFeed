@@ -3,8 +3,8 @@ import Kingfisher
 import ProgressHUD
 
 final class ImagesListViewController: UIViewController {
+    // MARK: - Properties
     @IBOutlet private var tableView: UITableView!
-    
     private let currentDate = Date()
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -18,7 +18,6 @@ final class ImagesListViewController: UIViewController {
     private var imageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -68,7 +67,12 @@ final class ImagesListViewController: UIViewController {
             cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated ), for: .normal)
             cell.likeButton.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
             cell.likeButton.tag = indexPath.row
-            cell.dateLabel.text = self.dateFormatter.string(from: photos[indexPath.row].createdAt ?? currentDate)
+            
+            guard let parcedDate = photos[indexPath.row].createdAt else {
+                cell.dateLabel.text = ""
+                return
+            }
+            cell.dateLabel.text = self.dateFormatter.string(from: parcedDate)
             cell.setupDateGradientLayer()
         }
     }
