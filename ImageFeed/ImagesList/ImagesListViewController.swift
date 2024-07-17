@@ -1,9 +1,10 @@
 import UIKit
+import Kingfisher
+import ProgressHUD
 
 final class ImagesListViewController: UIViewController {
+    // MARK: - Properties
     @IBOutlet private var tableView: UITableView!
-    
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private let currentDate = Date()
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -11,53 +12,74 @@ final class ImagesListViewController: UIViewController {
         formatter.timeStyle = .none
         return formatter
     }()
+    private var photos: [Photo] = []
+    private let imagesListService = ImagesListService.shared
+    private let storage = OAuth2TokenStorage.shared
+    private var imageServiceObserver: NSObjectProtocol?
     
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        checkResourcesAvaliability()
+        imageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) {
+            [weak self] _ in
+            guard let self else { return }
+            
+            self.updateTableViewAnimated()
+        }
+        
+        guard let accessToken = storage.bearerToken else {
+            print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
+            return
+        }
+        imagesListService.fetchPhotosNextPage(accessToken: accessToken)
+    }
+    
+    deinit {
+        if let observer = imageServiceObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     // MARK: - Private Functions
-    
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let cellImage = UIImage(named: photosName[indexPath.row]) else {
-            cell.cellImage.image = nil
+        let imageURLPath = photos[indexPath.row].thumbImageURL
+        guard let imageURL = URL(string: imageURLPath)
+        else {
+            print("[ImagesListViewController configCell]: URLError - Error while creating URL from string")
             return
         }
-        cell.cellImage.image = cellImage
         
-        cell.dateLabel.text = dateFormatter.string(from: currentDate)
+        cell.cellImage.backgroundColor = .ypGray
+        cell.cellImage.contentMode = .center
         
-        let cellLikeIcon = indexPath.row % 2 == 0 ? UIImage(named: Icons.buttonActivated) : UIImage(named: Icons.buttonDeactivated)
-        cell.likeButton.setImage(cellLikeIcon, for: .normal)
-    }
-    
-    private func checkResourcesAvaliability() {
-        var imageErrors = 0
-        
-        for photoName in photosName {
-            if UIImage(named: photoName) == nil {
-                imageErrors += 1
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(
+            with: imageURL,
+            placeholder: UIImage(named: Icons.imageStub),
+            options: [
+                .cacheSerializer(FormatIndicatedCacheSerializer.png)
+            ]
+        ) { [weak self] _ in
+            guard let self else { return }
+            
+            cell.cellImage.contentMode = .scaleAspectFit
+            cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated ), for: .normal)
+            cell.likeButton.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
+            cell.likeButton.tag = indexPath.row
+            
+            guard let parcedDate = photos[indexPath.row].createdAt else {
+                cell.dateLabel.text = ""
+                return
             }
-        }
-        
-        if imageErrors == photosName.count {
-            print("Image Loading Error: Failed to load images from resources")
-        } else if imageErrors > 0 {
-            print("Image Loading Error: Failed to load one or more images from resources")
-        }
-        
-        if UIImage(named: Icons.buttonActivated) == nil || UIImage(named: Icons.buttonDeactivated) == nil {
-            print("Image Loading Error: Failed to load one or more icons from resources")
-        }
-        
-        if imageErrors > 0 {
-            print("Cell Configuration Error: Failed to configure dynamic cell height")
+            cell.dateLabel.text = self.dateFormatter.string(from: parcedDate)
+            cell.setupDateGradientLayer()
         }
     }
     
@@ -71,19 +93,64 @@ final class ImagesListViewController: UIViewController {
                 return
             }
             
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
+            viewController.fullImageString = photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
+        }
+    }
+    
+    private func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        photos = imagesListService.photos
+        
+        if oldCount != newCount {
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
+        }
+    }
+    
+    @objc private func didTapLikeButton(_ sender: UIButton) {
+        let row = sender.tag
+        let photo = photos[row]
+        let isLiked = photo.isLiked
+        
+        UIBlockingProgressHUD.showAnimation()
+        
+        imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.dismissAnimation()
+            
+            switch result {
+            case .success:
+                if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
+                    DispatchQueue.main.async {                        
+                        self.photos[index].isLiked.toggle()
+                        
+                        let toggledImage = self.photos[index].isLiked ?
+                        Icons.buttonActivated :
+                        Icons.buttonDeactivated
+                        
+                        sender.setImage(UIImage(named: toggledImage), for: .normal)
+                    }
+                }
+            case .failure(let error):
+                print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
+            }
         }
     }
 }
 
 // MARK: - DataSource
-
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,14 +160,15 @@ extension ImagesListViewController: UITableViewDataSource {
             print("Typecast Error: Failed to dequeue ImagesListCell")
             return UITableViewCell()
         }
+
+        let photo = photos[indexPath.row]
+        imageListCell.configCell(with: photo, dateFormatter: dateFormatter, target: self, action: #selector(didTapLikeButton(_:)), index: indexPath.row)
         
-        configCell(for: imageListCell, with: indexPath)
         return imageListCell
     }
 }
 
-// MARK: - Delegate
-
+// MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: segueDestinations.singleImageSegue, sender: indexPath)
@@ -110,14 +178,22 @@ extension ImagesListViewController: UITableViewDelegate {
         let horizontalInset: CGFloat = 16
         let verticalInset: CGFloat = 4
         
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return 200
-        }
+        let photo = photos[indexPath.row]
         
         let imageViewWidth = tableView.bounds.width - ( 2 * horizontalInset )
-        let targetScale = imageViewWidth / image.size.width
-        let cellHeight = ( image.size.height * targetScale ) + ( 2 * verticalInset )
+        let targetScale = imageViewWidth / photo.size.width
+        let cellHeight = ( photo.size.height * targetScale ) + ( 2 * verticalInset )
         
         return cellHeight
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == photos.count - 1 {
+            guard let accessToken = storage.bearerToken else {
+                print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
+                return
+            }
+            imagesListService.fetchPhotosNextPage(accessToken: accessToken)
+        }
     }
 }

@@ -38,4 +38,5 @@ enum Icons {
     static let tabProfileActive = "tabProfileActive"
     static let tabEditorialActive = "tabEditorialActive"
     static let shareButton = "shareButton"
+    static let imageStub = "imageStub"
 }

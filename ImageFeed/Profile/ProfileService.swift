@@ -3,7 +3,7 @@ import UIKit
 final class ProfileService {
     // MARK: - Properties
     static let shared = ProfileService()
-    private let accessToken: String?
+    private var accessToken: String?
     private lazy var networkClient: NetworkClient = {
         return NetworkClient()
     }()
@@ -12,18 +12,14 @@ final class ProfileService {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
+    var profile: Profile?
     
     private init() {
         self.accessToken = OAuth2TokenStorage.shared.bearerToken
     }
-
+    
     // MARK: Private Functions
-    private func generateURLRequest() -> URLRequest? {
-        guard let accessToken else {
-            print("[ProfileService generateURLRequest]: accessTokenError - Missing access token")
-            return nil
-        }
-        
+    private func generateURLRequest(with accessToken: String) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseURL)/me") else {
             print("[ProfileService generateURLRequest]: urlRequestError - Unable to create Profile URL from string")
             return nil
@@ -36,12 +32,12 @@ final class ProfileService {
     }
     
     // MARK: - Public Functions
-    func fetchProfile(completion: @escaping (Result<Profile,Error>) -> Void) {
+    func fetchProfile(accessToken: String, completion: @escaping (Result<Void,Error>) -> Void) {
         assert(Thread.isMainThread)
         
         networkClient.task?.cancel()
         
-        guard let request = generateURLRequest() else {
+        guard let request = generateURLRequest(with: accessToken) else {
             print("[ProfileService fetchProfile]: urlRequestError - Unable to generate Profile URLRequest")
             return
         }
@@ -49,17 +45,22 @@ final class ProfileService {
         networkClient.fetch(request: request) { (result: Result<ProfileResponseBody, Error>) in
             switch result {
             case .success(let profileResponse):
-                let profile = Profile(
+                self.profile = Profile(
                     username: "@\(profileResponse.username)",
                     name: "\(profileResponse.firstName) \(profileResponse.lastName ?? "")",
                     bio: profileResponse.bio ?? ""
                 )
                 
-                completion(.success(profile))
+                completion(.success(()))
             case.failure(let error):
                 print("[ProfileService fetchProfile]: \(error.localizedDescription) - Error while fetching profile")
                 completion(.failure(error))
             }
         }
+    }
+    
+    func clearLoadedData() {
+        profile = nil
+        accessToken = nil
     }
 }

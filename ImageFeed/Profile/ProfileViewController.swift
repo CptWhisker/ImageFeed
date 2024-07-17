@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: Icons.logoutButton), for: .normal)
         button.tintColor = .ypRed
+        button.addTarget(self, action: #selector(logout), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -46,7 +47,9 @@ final class ProfileViewController: UIViewController {
     private lazy var profileImageService: ProfileImageService = {
         return ProfileImageService.shared
     }()
-    
+    private lazy var profileLogoutService: ProfileLogoutService = {
+        return ProfileLogoutService.shared
+    }()
     private var profile: Profile?
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -71,7 +74,13 @@ final class ProfileViewController: UIViewController {
         updateAvatar()
     }
     
-    // MARK: Private Functions
+    deinit {
+        if let observer = profileImageServiceObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
+    // MARK: - Private Functions
     private func configureInterface() {
         view.backgroundColor = .ypBlack
         configureProfilePictureImage()
@@ -146,6 +155,17 @@ final class ProfileViewController: UIViewController {
         profilePictureImage.kf.setImage(with: profileImageURL,
                                         placeholder: UIImage(named: Icons.profilePictureStub),
                                         options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
+    }
+    
+    @objc private func logout() {
+        let alert = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self else { return }
+            
+            self.profileLogoutService.logout()
+        })
+        alert.addAction(UIAlertAction(title: "Нет", style: .default))
+        present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Public Functions
