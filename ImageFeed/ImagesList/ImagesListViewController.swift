@@ -41,6 +41,12 @@ final class ImagesListViewController: UIViewController {
         imagesListService.fetchPhotosNextPage(accessToken: accessToken)
     }
     
+    deinit {
+        if let observer = imageServiceObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     // MARK: - Private Functions
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageURLPath = photos[indexPath.row].thumbImageURL
@@ -119,12 +125,12 @@ final class ImagesListViewController: UIViewController {
         imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
             guard let self else { return }
             
+            UIBlockingProgressHUD.dismissAnimation()
+            
             switch result {
             case .success:
                 if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
-                    DispatchQueue.main.async {
-                        print("Changing Like BVutton")
-                        
+                    DispatchQueue.main.async {                        
                         self.photos[index].isLiked.toggle()
                         
                         let toggledImage = self.photos[index].isLiked ?
@@ -132,13 +138,9 @@ final class ImagesListViewController: UIViewController {
                         Icons.buttonDeactivated
                         
                         sender.setImage(UIImage(named: toggledImage), for: .normal)
-                        
-                        UIBlockingProgressHUD.dismissAnimation()
                     }
                 }
             case .failure(let error):
-                UIBlockingProgressHUD.dismissAnimation()
-                
                 print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
             }
         }
@@ -158,8 +160,10 @@ extension ImagesListViewController: UITableViewDataSource {
             print("Typecast Error: Failed to dequeue ImagesListCell")
             return UITableViewCell()
         }
+
+        let photo = photos[indexPath.row]
+        imageListCell.configCell(with: photo, dateFormatter: dateFormatter, target: self, action: #selector(didTapLikeButton(_:)), index: indexPath.row)
         
-        configCell(for: imageListCell, with: indexPath)
         return imageListCell
     }
 }

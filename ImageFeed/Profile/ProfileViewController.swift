@@ -74,7 +74,13 @@ final class ProfileViewController: UIViewController {
         updateAvatar()
     }
     
-    // MARK: Private Functions
+    deinit {
+        if let observer = profileImageServiceObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
+    // MARK: - Private Functions
     private func configureInterface() {
         view.backgroundColor = .ypBlack
         configureProfilePictureImage()
