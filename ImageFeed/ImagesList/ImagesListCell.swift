@@ -7,7 +7,11 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet private weak var cellImage: UIImageView!
     @IBOutlet private weak var likeButton: UIButton!
     @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var dateGradientView: UIView!
+    @IBOutlet private weak var dateGradientView: UIView! {
+        didSet {
+            setupDateGradientLayer()
+        }
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -15,7 +19,7 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.cancelDownloadTask()
     }
     
-    func setupDateGradientLayer() {
+    private func setupDateGradientLayer() {
         let dateGradientLayer = CAGradientLayer()
         dateGradientLayer.frame = dateGradientView.bounds
         dateGradientLayer.colors = [
@@ -55,7 +59,6 @@ final class ImagesListCell: UITableViewCell {
                 return
             }
             self.dateLabel.text = dateFormatter.string(from: parsedDate)
-            self.setupDateGradientLayer()
         }
     }
 }
