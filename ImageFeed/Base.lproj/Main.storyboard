@@ -50,7 +50,7 @@
         <!--Web View View Controller-->
         <scene sceneID="NPt-8R-9X6">
             <objects>
-                <viewController id="Xfl-M3-Azu" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="Xfl-M3-Azu" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XxK-jD-6UH">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="922"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
