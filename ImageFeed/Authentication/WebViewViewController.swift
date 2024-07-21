@@ -27,12 +27,11 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
         
         webView.navigationDelegate = self
         presenter?.viewDidLoad()
-//        loadAuthView()
         
         estimatedProgressObservation = webView.observe(\.estimatedProgress, options: []) { [weak self] _, _ in
             guard let self else { return }
             
-            self.updateProgress()
+            self.presenter?.didUpdateProgressValue(webView.estimatedProgress)
         }
     }
     
@@ -65,28 +64,6 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
     }
     
     // MARK: - Loading Data
-//    private func loadAuthView() {
-//        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-//            print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
-//            return
-//        }
-//        
-//        urlComponents.queryItems = [
-//            URLQueryItem(name: "client_id", value: Constants.accessKey),
-//            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-//            URLQueryItem(name: "response_type", value: "code"),
-//            URLQueryItem(name: "scope", value: Constants.accessScope)
-//        ]
-//        
-//        guard let url = urlComponents.url else {
-//            print("Error: Unable to create URL from urlComponents")
-//            return
-//        }
-//        
-//        let request = URLRequest(url: url)
-//        webView.load(request)
-//    }
-    
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if
             let url = navigationAction.request.url,
@@ -107,9 +84,12 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
     }
     
     //MARK: - KVO
-    private func updateProgress() {
-        loadingBar.progress = Float(webView.estimatedProgress)
-        loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    func setProgressValue(_ newValue: Float) {
+        loadingBar.progress = newValue
+    }
+    
+    func setProgressHidden(_ isHidden: Bool) {
+        loadingBar.isHidden = isHidden
     }
 }
 
