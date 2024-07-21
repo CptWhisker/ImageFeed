@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-final class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController, WebViewViewControllerProtocol {
     // MARK: - Properties
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
@@ -17,15 +17,17 @@ final class WebViewViewController: UIViewController {
     }()
     private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
+    var presenter: WebViewPresenterProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.navigationDelegate = self
-        
         configureInterface()
-        loadAuthView()
+        
+        webView.navigationDelegate = self
+        presenter?.viewDidLoad()
+//        loadAuthView()
         
         estimatedProgressObservation = webView.observe(\.estimatedProgress, options: []) { [weak self] _, _ in
             guard let self else { return }
@@ -63,27 +65,27 @@ final class WebViewViewController: UIViewController {
     }
     
     // MARK: - Loading Data
-    private func loadAuthView() {
-        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
-            return
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Error: Unable to create URL from urlComponents")
-            return
-        }
-        
-        let request = URLRequest(url: url)
-        webView.load(request)
-    }
+//    private func loadAuthView() {
+//        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
+//            print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
+//            return
+//        }
+//        
+//        urlComponents.queryItems = [
+//            URLQueryItem(name: "client_id", value: Constants.accessKey),
+//            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+//            URLQueryItem(name: "response_type", value: "code"),
+//            URLQueryItem(name: "scope", value: Constants.accessScope)
+//        ]
+//        
+//        guard let url = urlComponents.url else {
+//            print("Error: Unable to create URL from urlComponents")
+//            return
+//        }
+//        
+//        let request = URLRequest(url: url)
+//        webView.load(request)
+//    }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if
@@ -97,6 +99,11 @@ final class WebViewViewController: UIViewController {
         } else {
             return nil
         }
+    }
+    
+    //MARK: - Public Functions
+    func load(request: URLRequest) {
+        webView.load(request)
     }
     
     //MARK: - KVO
