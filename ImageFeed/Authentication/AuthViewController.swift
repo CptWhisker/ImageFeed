@@ -81,7 +81,9 @@ extension AuthViewController {
                 assertionFailure("Failed to prepare for \(segueDestinations.webViewSegue) segue")
                 return
             }
-            let webViewPresenter = WebViewPresenter()
+            
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
             webViewViewController.presenter = webViewPresenter
             webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
