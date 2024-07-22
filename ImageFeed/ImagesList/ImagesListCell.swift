@@ -61,4 +61,9 @@ final class ImagesListCell: UITableViewCell {
             self.dateLabel.text = dateFormatter.string(from: parsedDate)
         }
     }
+    
+    func updateLikeButton(isLiked: Bool) {
+        let toggledImage = isLiked ? Icons.buttonActivated : Icons.buttonDeactivated
+        likeButton.setImage(UIImage(named: toggledImage), for: .normal)
+    }
 }

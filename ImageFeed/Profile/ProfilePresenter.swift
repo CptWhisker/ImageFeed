@@ -1,6 +1,7 @@
 import UIKit
 
 final class ProfilePresenter: ProfilePresenterProtocol {
+    // MARK: - Properties
     weak var view: ProfileViewControllerProtocol?
     private let profileService: ProfileService
     private let profileImageService: ProfileImageService
@@ -14,6 +15,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.profileLogoutService = profileLogoutService
     }
     
+    // MARK: Public Functions
     func viewDidLoad() {
         profile = ProfileService.shared.profile
         

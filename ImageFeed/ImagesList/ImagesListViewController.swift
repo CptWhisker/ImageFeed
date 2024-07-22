@@ -13,9 +13,6 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         return formatter
     }()
     private var photos: [Photo] = []
-    private let imagesListService = ImagesListService.shared
-    private let storage = OAuth2TokenStorage.shared
-    private var imageServiceObserver: NSObjectProtocol?
     var presenter: ImagesListPresenterProtocol?
     
     // MARK: - Lifecycle
@@ -24,28 +21,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        imageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) {
-            [weak self] _ in
-            guard let self else { return }
-            
-            self.updateTableViewAnimated()
-        }
-        
-        guard let accessToken = storage.bearerToken else {
-            print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
-            return
-        }
-        imagesListService.fetchPhotosNextPage(accessToken: accessToken)
-    }
-    
-    deinit {
-        if let observer = imageServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Private Functions
@@ -65,10 +41,21 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         }
     }
     
-    private func updateTableViewAnimated() {
+    @objc private func didTapLikeButton(_ sender: UIButton) {
+        let row = sender.tag
+        presenter?.didTapLikeButton(at: row)
+    }
+    
+    // MARK: - Public Functions
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
+    func updateTableViewAnimated() {
         let oldCount = photos.count
-        let newCount = imagesListService.photos.count
-        photos = imagesListService.photos
+        let newCount = presenter?.photos.count ?? 0
+        photos = presenter?.photos ?? []
         
         if oldCount != newCount {
             tableView.performBatchUpdates {
@@ -81,41 +68,10 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         }
     }
     
-    @objc private func didTapLikeButton(_ sender: UIButton) {
-        let row = sender.tag
-        let photo = photos[row]
-        let isLiked = photo.isLiked
-        
-        UIBlockingProgressHUD.showAnimation()
-        
-        imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
-            guard let self else { return }
-            
-            UIBlockingProgressHUD.dismissAnimation()
-            
-            switch result {
-            case .success:
-                if let index = self.photos.firstIndex(where: { $0.id == photo.id }) {
-                    DispatchQueue.main.async {                        
-                        self.photos[index].isLiked.toggle()
-                        
-                        let toggledImage = self.photos[index].isLiked ?
-                        Icons.buttonActivated :
-                        Icons.buttonDeactivated
-                        
-                        sender.setImage(UIImage(named: toggledImage), for: .normal)
-                    }
-                }
-            case .failure(let error):
-                print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
-            }
+    func toggleLikeButton(at index: Int, isLiked: Bool) {
+        if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImagesListCell {
+            cell.updateLikeButton(isLiked: isLiked)
         }
-    }
-    
-    // MARK: - Public Functions
-    func configure(_ presenter: ImagesListPresenterProtocol) {
-        self.presenter = presenter
-        self.presenter?.view = self
     }
 }
 
@@ -161,11 +117,7 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == photos.count - 1 {
-            guard let accessToken = storage.bearerToken else {
-                print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
-                return
-            }
-            imagesListService.fetchPhotosNextPage(accessToken: accessToken)
+            presenter?.fetchNextPage()
         }
     }
 }
