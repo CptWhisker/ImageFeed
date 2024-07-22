@@ -1,7 +1,7 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     // MARK: - Properties
     private lazy var profilePictureImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.profilePictureStub))
@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: Icons.logoutButton), for: .normal)
         button.tintColor = .ypRed
-        button.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        button.addTarget(self, action: #selector(showLogoutConfirmation), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -41,17 +41,8 @@ final class ProfileViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    private lazy var profileService: ProfileService = {
-        return ProfileService.shared
-    }()
-    private lazy var profileImageService: ProfileImageService = {
-        return ProfileImageService.shared
-    }()
-    private lazy var profileLogoutService: ProfileLogoutService = {
-        return ProfileLogoutService.shared
-    }()
     private var profile: Profile?
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -59,25 +50,7 @@ final class ProfileViewController: UIViewController {
         
         configureInterface()
         
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) {
-            [weak self] _ in
-            guard let self else { return }
-            
-            print("Updating from NotificationCenter")
-            self.updateAvatar()
-        }
-        
-        updateAvatar()
-    }
-    
-    deinit {
-        if let observer = profileImageServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Private Functions
@@ -141,35 +114,44 @@ final class ProfileViewController: UIViewController {
             profileStatusLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16)
         ])
     }
+
+    // MARK: - Public Functions
+    func setProfile(_ profile: Profile) {
+        self.profile = profile
+    }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURLPath = profileImageService.profileImage,
-            let profileImageURL = URL(string: profileImageURLPath)
-        else {
-            print("No avatar")
-            return
-        }
-        
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
+    func updateProfilePicture(_ imageURL: URL) {
         let cornerRadius = RoundCornerImageProcessor(cornerRadius: 61)
-        profilePictureImage.kf.setImage(with: profileImageURL,
+        profilePictureImage.kf.setImage(with: imageURL,
                                         placeholder: UIImage(named: Icons.profilePictureStub),
                                         options: [.processor(cornerRadius), .cacheSerializer(FormatIndicatedCacheSerializer.png)])
     }
     
-    @objc private func logout() {
+    func updateName(_ name: String) {
+        nameLabel.text = name
+    }
+    
+    func updateUsername(_ username: String) {
+        socialMediaLabel.text = username
+    }
+    
+    func updateBio(_ bio: String) {
+        profileStatusLabel.text = bio
+    }
+    
+    @objc func showLogoutConfirmation() {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             guard let self else { return }
             
-            self.profileLogoutService.logout()
+            presenter?.performLogout()
         })
         alert.addAction(UIAlertAction(title: "Нет", style: .default))
         present(alert, animated: true, completion: nil)
-    }
-    
-    // MARK: - Public Functions
-    func setProfile(_ profile: Profile) {
-        self.profile = profile
     }
 }

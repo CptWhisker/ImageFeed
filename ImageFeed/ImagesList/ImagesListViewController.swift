@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 import ProgressHUD
 
-final class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     // MARK: - Properties
     @IBOutlet private var tableView: UITableView!
     private let currentDate = Date()
@@ -16,6 +16,7 @@ final class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private let storage = OAuth2TokenStorage.shared
     private var imageServiceObserver: NSObjectProtocol?
+    var presenter: ImagesListPresenterProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -48,41 +49,6 @@ final class ImagesListViewController: UIViewController {
     }
     
     // MARK: - Private Functions
-//    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-//        let imageURLPath = photos[indexPath.row].thumbImageURL
-//        guard let imageURL = URL(string: imageURLPath)
-//        else {
-//            print("[ImagesListViewController configCell]: URLError - Error while creating URL from string")
-//            return
-//        }
-//        
-//        cell.cellImage.backgroundColor = .ypGray
-//        cell.cellImage.contentMode = .center
-//        
-//        cell.cellImage.kf.indicatorType = .activity
-//        cell.cellImage.kf.setImage(
-//            with: imageURL,
-//            placeholder: UIImage(named: Icons.imageStub),
-//            options: [
-//                .cacheSerializer(FormatIndicatedCacheSerializer.png)
-//            ]
-//        ) { [weak self] _ in
-//            guard let self else { return }
-//            
-//            cell.cellImage.contentMode = .scaleAspectFit
-//            cell.likeButton.setImage(UIImage(named: photos[indexPath.row].isLiked ? Icons.buttonActivated : Icons.buttonDeactivated ), for: .normal)
-//            cell.likeButton.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
-//            cell.likeButton.tag = indexPath.row
-//            
-//            guard let parcedDate = photos[indexPath.row].createdAt else {
-//                cell.dateLabel.text = ""
-//                return
-//            }
-//            cell.dateLabel.text = self.dateFormatter.string(from: parcedDate)
-//            cell.setupDateGradientLayer()
-//        }
-//    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueDestinations.singleImageSegue {
             guard
@@ -144,6 +110,12 @@ final class ImagesListViewController: UIViewController {
                 print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
             }
         }
+    }
+    
+    // MARK: - Public Functions
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
     }
 }
 
