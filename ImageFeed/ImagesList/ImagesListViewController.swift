@@ -69,6 +69,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     }
     
     func toggleLikeButton(at index: Int, isLiked: Bool) {
+        photos[index].isLiked = isLiked
         if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImagesListCell {
             cell.updateLikeButton(isLiked: isLiked)
         }
