@@ -3,13 +3,13 @@ import UIKit
 final class ProfilePresenter: ProfilePresenterProtocol {
     // MARK: - Properties
     weak var view: ProfileViewControllerProtocol?
-    private let profileService: ProfileService
-    private let profileImageService: ProfileImageService
-    private let profileLogoutService: ProfileLogoutService
+    private var profileService: ProfileServiceProtocol
+    private var profileImageService: ProfileImageServiceProtocol
+    private var profileLogoutService: ProfileLogoutServiceProtocol
     private var profile: Profile?
     private var profileImageServiceObserver: NSObjectProtocol?
 
-    init(profileService: ProfileService, profileImageService: ProfileImageService, profileLogoutService: ProfileLogoutService) {
+    init(profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol, profileLogoutService: ProfileLogoutServiceProtocol) {
         self.profileService = profileService
         self.profileImageService = profileImageService
         self.profileLogoutService = profileLogoutService
@@ -17,7 +17,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     
     // MARK: Public Functions
     func viewDidLoad() {
-        profile = ProfileService.shared.profile
+        profile = profileService.profile
         
         updateView()
         
@@ -49,7 +49,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     
     func updateAvatar() {
         guard 
-            let profileImageURLPath = ProfileImageService.shared.profileImage,
+            let profileImageURLPath = profileImageService.profileImage,
             let profileImageURL = URL(string: profileImageURLPath) 
         else {
             print("ERROR: updateAvatar")
