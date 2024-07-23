@@ -4,11 +4,11 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     // MARK: - Properties
     var view: ImagesListViewControllerProtocol?
     var photos: [Photo] = []
-    private let imagesListService: ImagesListService
-    private let storage: OAuth2TokenStorage
+    private let imagesListService: ImagesListServiceProtocol
+    private let storage: OAuth2TokenStorageProtocol
     private var imageServiceObserver: NSObjectProtocol?
     
-    init(imagesListService: ImagesListService, storage: OAuth2TokenStorage) {
+    init(imagesListService: ImagesListServiceProtocol, storage: OAuth2TokenStorageProtocol) {
         self.imagesListService = imagesListService
         self.storage = storage
     }

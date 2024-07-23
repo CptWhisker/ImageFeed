@@ -1,10 +1,10 @@
 import UIKit
 
-final class ImagesListService {
+final class ImagesListService: ImagesListServiceProtocol {
     // MARK: - Properties
     static let shared = ImagesListService()
     private var lastLoadedPage: Int?
-    private(set) var photos: [Photo] = []
+    var photos: [Photo] = []
     private lazy var networkClient: NetworkClient = {
         return NetworkClient()
     }()

@@ -29,6 +29,12 @@
 		CE5837B12C501375008CF92B /* ProfileServicesMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837B02C501375008CF92B /* ProfileServicesMock.swift */; };
 		CE5837B32C501500008CF92B /* ProfileServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837B22C501500008CF92B /* ProfileServiceProtocol.swift */; };
 		CE5837B52C50181E008CF92B /* ProfileImageServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837B42C50181D008CF92B /* ProfileImageServiceProtocol.swift */; };
+		CE5837BD2C501E36008CF92B /* ImagesListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837BC2C501E36008CF92B /* ImagesListTests.swift */; };
+		CE5837BF2C502473008CF92B /* ImagesListPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837BE2C502473008CF92B /* ImagesListPresenterSpy.swift */; };
+		CE5837C12C502806008CF92B /* ImagesListServicesMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837C02C502806008CF92B /* ImagesListServicesMock.swift */; };
+		CE5837C32C502820008CF92B /* ImagesListServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837C22C502820008CF92B /* ImagesListServiceProtocol.swift */; };
+		CE5837C52C502971008CF92B /* OAuth2TokenStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837C42C502971008CF92B /* OAuth2TokenStorageProtocol.swift */; };
+		CE5837C72C5030F1008CF92B /* ImagesListViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5837C62C5030F1008CF92B /* ImagesListViewControllerSpy.swift */; };
 		CE6DA94F2BE3FB4200D08293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DA94E2BE3FB4200D08293 /* AppDelegate.swift */; };
 		CE6DA9512BE3FB4200D08293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DA9502BE3FB4200D08293 /* SceneDelegate.swift */; };
 		CE6DA9532BE3FB4200D08293 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DA9522BE3FB4200D08293 /* ImagesListViewController.swift */; };
@@ -100,6 +106,12 @@
 		CE5837B02C501375008CF92B /* ProfileServicesMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServicesMock.swift; sourceTree = "<group>"; };
 		CE5837B22C501500008CF92B /* ProfileServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceProtocol.swift; sourceTree = "<group>"; };
 		CE5837B42C50181D008CF92B /* ProfileImageServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageServiceProtocol.swift; sourceTree = "<group>"; };
+		CE5837BC2C501E36008CF92B /* ImagesListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListTests.swift; sourceTree = "<group>"; };
+		CE5837BE2C502473008CF92B /* ImagesListPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenterSpy.swift; sourceTree = "<group>"; };
+		CE5837C02C502806008CF92B /* ImagesListServicesMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListServicesMock.swift; sourceTree = "<group>"; };
+		CE5837C22C502820008CF92B /* ImagesListServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListServiceProtocol.swift; sourceTree = "<group>"; };
+		CE5837C42C502971008CF92B /* OAuth2TokenStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorageProtocol.swift; sourceTree = "<group>"; };
+		CE5837C62C5030F1008CF92B /* ImagesListViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewControllerSpy.swift; sourceTree = "<group>"; };
 		CE6DA94B2BE3FB4200D08293 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6DA94E2BE3FB4200D08293 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE6DA9502BE3FB4200D08293 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -159,15 +171,75 @@
 		CE5837872C4D5024008CF92B /* ImageFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				CE5837882C4D5024008CF92B /* WebViewTests.swift */,
-				CE5837902C4D521B008CF92B /* WebViewPresenterSpy.swift */,
-				CE5837922C4D5758008CF92B /* WebViewViewControllerSpy.swift */,
-				CE5837A02C4FF493008CF92B /* ProfileViewTests.swift */,
-				CE5837A22C4FF593008CF92B /* ProfilePresenterSpy.swift */,
-				CE5837A42C4FFA73008CF92B /* ProfileViewControllerMock.swift */,
-				CE5837B02C501375008CF92B /* ProfileServicesMock.swift */,
+				CE5837BB2C501E15008CF92B /* ImagesListTests */,
+				CE5837BA2C501DEF008CF92B /* ProfileViewTests */,
+				CE5837B92C501DD2008CF92B /* WebViewTests */,
 			);
 			path = ImageFeedTests;
+			sourceTree = "<group>";
+		};
+		CE5837B62C501D4F008CF92B /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				CE5837762C4D096F008CF92B /* WebViewViewControllerProtocol.swift */,
+				CEF0610E2C14577400CF0562 /* WebViewViewControllerDelegate.swift */,
+				CE5837782C4D0982008CF92B /* WebViewPresenterProtocol.swift */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
+		CE5837B72C501D77008CF92B /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				CE5837B42C50181D008CF92B /* ProfileImageServiceProtocol.swift */,
+				CE5837B22C501500008CF92B /* ProfileServiceProtocol.swift */,
+				CE5837AE2C5012F1008CF92B /* ProfileLogoutServiceProtocol.swift */,
+				CE5837962C4EA69C008CF92B /* ProfilePresenterProtocol.swift */,
+				CE5837942C4EA678008CF92B /* ProfileViewControllerProtocol.swift */,
+			);
+			path = ProfileView;
+			sourceTree = "<group>";
+		};
+		CE5837B82C501DAE008CF92B /* ImagesListView */ = {
+			isa = PBXGroup;
+			children = (
+				CE58379A2C4EA6C3008CF92B /* ImagesListPresenterProtocol.swift */,
+				CE5837982C4EA6B3008CF92B /* ImagesListViewControllerProtocol.swift */,
+				CE5837C22C502820008CF92B /* ImagesListServiceProtocol.swift */,
+			);
+			path = ImagesListView;
+			sourceTree = "<group>";
+		};
+		CE5837B92C501DD2008CF92B /* WebViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				CE5837922C4D5758008CF92B /* WebViewViewControllerSpy.swift */,
+				CE5837902C4D521B008CF92B /* WebViewPresenterSpy.swift */,
+				CE5837882C4D5024008CF92B /* WebViewTests.swift */,
+			);
+			path = WebViewTests;
+			sourceTree = "<group>";
+		};
+		CE5837BA2C501DEF008CF92B /* ProfileViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				CE5837B02C501375008CF92B /* ProfileServicesMock.swift */,
+				CE5837A42C4FFA73008CF92B /* ProfileViewControllerMock.swift */,
+				CE5837A22C4FF593008CF92B /* ProfilePresenterSpy.swift */,
+				CE5837A02C4FF493008CF92B /* ProfileViewTests.swift */,
+			);
+			path = ProfileViewTests;
+			sourceTree = "<group>";
+		};
+		CE5837BB2C501E15008CF92B /* ImagesListTests */ = {
+			isa = PBXGroup;
+			children = (
+				CE5837BC2C501E36008CF92B /* ImagesListTests.swift */,
+				CE5837BE2C502473008CF92B /* ImagesListPresenterSpy.swift */,
+				CE5837C02C502806008CF92B /* ImagesListServicesMock.swift */,
+				CE5837C62C5030F1008CF92B /* ImagesListViewControllerSpy.swift */,
+			);
+			path = ImagesListTests;
 			sourceTree = "<group>";
 		};
 		CE6DA9422BE3FB4100D08293 = {
@@ -278,17 +350,11 @@
 		CEF0610D2C14575B00CF0562 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				CEF0610E2C14577400CF0562 /* WebViewViewControllerDelegate.swift */,
-				CE5837762C4D096F008CF92B /* WebViewViewControllerProtocol.swift */,
-				CE5837782C4D0982008CF92B /* WebViewPresenterProtocol.swift */,
+				CE5837B82C501DAE008CF92B /* ImagesListView */,
+				CE5837B72C501D77008CF92B /* ProfileView */,
+				CE5837B62C501D4F008CF92B /* WebView */,
 				CE58377E2C4D4511008CF92B /* AuthHelperProtocol.swift */,
-				CE5837942C4EA678008CF92B /* ProfileViewControllerProtocol.swift */,
-				CE5837962C4EA69C008CF92B /* ProfilePresenterProtocol.swift */,
-				CE5837982C4EA6B3008CF92B /* ImagesListViewControllerProtocol.swift */,
-				CE58379A2C4EA6C3008CF92B /* ImagesListPresenterProtocol.swift */,
-				CE5837AE2C5012F1008CF92B /* ProfileLogoutServiceProtocol.swift */,
-				CE5837B22C501500008CF92B /* ProfileServiceProtocol.swift */,
-				CE5837B42C50181D008CF92B /* ProfileImageServiceProtocol.swift */,
+				CE5837C42C502971008CF92B /* OAuth2TokenStorageProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -431,6 +497,10 @@
 				CE5837B12C501375008CF92B /* ProfileServicesMock.swift in Sources */,
 				CE5837932C4D5758008CF92B /* WebViewViewControllerSpy.swift in Sources */,
 				CE5837A32C4FF593008CF92B /* ProfilePresenterSpy.swift in Sources */,
+				CE5837C12C502806008CF92B /* ImagesListServicesMock.swift in Sources */,
+				CE5837BF2C502473008CF92B /* ImagesListPresenterSpy.swift in Sources */,
+				CE5837C72C5030F1008CF92B /* ImagesListViewControllerSpy.swift in Sources */,
+				CE5837BD2C501E36008CF92B /* ImagesListTests.swift in Sources */,
 				CE5837A52C4FFA73008CF92B /* ProfileViewControllerMock.swift in Sources */,
 				CE5837912C4D521B008CF92B /* WebViewPresenterSpy.swift in Sources */,
 			);
@@ -449,6 +519,7 @@
 				CE914AAF2C04E85900525E75 /* ProfileViewController.swift in Sources */,
 				CE58377F2C4D4511008CF92B /* AuthHelperProtocol.swift in Sources */,
 				CE6DA94F2BE3FB4200D08293 /* AppDelegate.swift in Sources */,
+				CE5837C32C502820008CF92B /* ImagesListServiceProtocol.swift in Sources */,
 				CE5837B52C50181E008CF92B /* ProfileImageServiceProtocol.swift in Sources */,
 				CE5837792C4D0982008CF92B /* WebViewPresenterProtocol.swift in Sources */,
 				CE58379B2C4EA6C3008CF92B /* ImagesListPresenterProtocol.swift in Sources */,
@@ -462,6 +533,7 @@
 				CEF0612D2C1E07BA00CF0562 /* ProfileService.swift in Sources */,
 				CEF0612B2C1DDA7B00CF0562 /* UIBlockingProgressHUD.swift in Sources */,
 				CE5837812C4D4567008CF92B /* AuthHelper.swift in Sources */,
+				CE5837C52C502971008CF92B /* OAuth2TokenStorageProtocol.swift in Sources */,
 				CEF061332C2C7CE900CF0562 /* ProfileImageService.swift in Sources */,
 				CEF061152C1785E400CF0562 /* NetworkClient.swift in Sources */,
 				CE5837772C4D096F008CF92B /* WebViewViewControllerProtocol.swift in Sources */,
