@@ -22,6 +22,13 @@
         "identifier" : "CE5837852C4D5024008CF92B",
         "name" : "ImageFeedTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:ImageFeed.xcodeproj",
+        "identifier" : "CE5837CB2C50497A008CF92B",
+        "name" : "ImageFeedUITests"
+      }
     }
   ],
   "version" : 1

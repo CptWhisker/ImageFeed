@@ -11,6 +11,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }()
     private lazy var logoutButton: UIButton = {
         let button = UIButton(type: .system)
+        button.accessibilityIdentifier = "Logout button"
         button.setImage(UIImage(named: Icons.logoutButton), for: .normal)
         button.tintColor = .ypRed
         button.addTarget(self, action: #selector(showLogoutConfirmation), for: .touchUpInside)

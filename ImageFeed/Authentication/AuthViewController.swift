@@ -11,6 +11,7 @@ final class AuthViewController: UIViewController {
     }()
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
+        button.accessibilityIdentifier = "Authenticate"
         button.layer.cornerRadius = 16
         button.tintColor = .ypBlack
         button.backgroundColor = .ypWhite

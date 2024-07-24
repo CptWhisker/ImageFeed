@@ -117,6 +117,9 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let testMode = ProcessInfo.processInfo.arguments.contains("Test mode")
+        if testMode { return }
+        
         if indexPath.row == photos.count - 1 {
             presenter?.fetchNextPage()
         }

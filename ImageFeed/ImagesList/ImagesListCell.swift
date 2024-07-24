@@ -53,6 +53,7 @@ final class ImagesListCell: UITableViewCell {
             self.likeButton.setImage(UIImage(named: photo.isLiked ? Icons.buttonActivated : Icons.buttonDeactivated), for: .normal)
             self.likeButton.addTarget(target, action: action, for: .touchUpInside)
             self.likeButton.tag = index
+            self.likeButton.accessibilityIdentifier = "Like button"
             
             guard let parsedDate = photo.createdAt else {
                 self.dateLabel.text = ""
