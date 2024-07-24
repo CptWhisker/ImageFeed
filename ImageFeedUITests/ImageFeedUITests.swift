@@ -15,19 +15,28 @@ final class ImageFeedUITests: XCTestCase {
         let webView = app.webViews["UnsplashWebView"]
         XCTAssertTrue(webView.waitForExistence(timeout: 5))
         
+        sleep(2)
+        
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
         loginTextField.typeText("aleks.moskovtsev@gmail.com")
         
-        let doneButton = app.buttons["Done"]
+        sleep(2)
+        
+        let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+//        let doneButton = app.buttons["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 5))
         doneButton.tap()
+        
+        sleep(2)
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
         passwordTextField.typeText("WH93zzz!21alM3")
+        
+        sleep(2)
         
         webView.buttons["Login"].tap()
         
@@ -74,9 +83,12 @@ final class ImageFeedUITests: XCTestCase {
         
         XCTAssertTrue(image.exists)
         image.pinch(withScale: 3, velocity: 1) // zoom in
+        sleep(2)
         image.pinch(withScale: 0.5, velocity: -1) // zoom out
         
-        let backButton = app.navigationBars.buttons.element(boundBy: 0)
+        sleep(2)
+        
+        let backButton = app.buttons["Back button"]
         XCTAssertTrue(backButton.exists)
         backButton.tap()
     }
