@@ -24,8 +24,6 @@ enum WebViewConstants {
 enum segueDestinations {
     static let singleImageSegue = "ShowSingleImage"
     static let webViewSegue = "ShowWebView"
-    static let authSegue = "proceedToAuthViewController"
-    static let imageFeedSegue = "proceedToImageFeed"
 }
 
 enum Icons {

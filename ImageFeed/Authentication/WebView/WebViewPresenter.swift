@@ -10,7 +10,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     
     func viewDidLoad() {
         guard let request = authHelper.authRequest() else {
-            print("ERROR")
+            print("[WebViewPresenter viewDidLoad]: urlRequestError - Failed to generate URLRequest")
             return
         }
         

@@ -23,15 +23,24 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             [weak self] _ in
             guard let self else { return }
             
-            photos = imagesListService.photos
-            view?.updateTableViewAnimated()
+            self.updateTableViewAnimated()
         }
         
         guard let accessToken = storage.bearerToken else {
-            print("[ImagesListViewController viewDidLoad]: accessTokenError - Missing access token")
+            print("[ImagesListPresenter viewDidLoad]: accessTokenError - Missing access token")
             return
         }
         imagesListService.fetchPhotosNextPage(accessToken: accessToken)
+    }
+    
+    func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        photos = imagesListService.photos
+        
+        if oldCount != newCount {
+            view?.updateTableViewAnimated(from: oldCount, to: newCount)
+        }
     }
     
     func fetchNextPage() {
@@ -58,7 +67,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 self.photos[index].isLiked.toggle()
                 self.view?.toggleLikeButton(at: index, isLiked: self.photos[index].isLiked)
             case .failure(let error):
-                print("[ImagesListService changeLike]: \(error.localizedDescription) - Error while changing isLiked property")
+                print("[ImagesListPresenter didTapLikeButton]: \(error.localizedDescription) - Method returned a .failure result")
             }
         }
     }

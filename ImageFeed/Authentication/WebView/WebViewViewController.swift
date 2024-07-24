@@ -69,6 +69,7 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
         if let url = navigationAction.request.url {
             return presenter?.code(from: url)
         }
+        print("[WebViewViewController getCode]: authError - Failed to receive authorization code")
         return nil
     }
     

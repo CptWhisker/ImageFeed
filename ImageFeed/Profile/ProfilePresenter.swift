@@ -38,7 +38,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     
     func updateView() {
         guard let profile else {
-            print("ERROR: updateView")
+            print("[ProfilePresenter updateView]: profileError - Failed get profile data")
             return
         }
         
@@ -52,7 +52,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             let profileImageURLPath = profileImageService.profileImage,
             let profileImageURL = URL(string: profileImageURLPath) 
         else {
-            print("ERROR: updateAvatar")
+            print("[ProfilePresenter updateAvatar]: urlError - Failed to generate image URL")
             return
         }
         

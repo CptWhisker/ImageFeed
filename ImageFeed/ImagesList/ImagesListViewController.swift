@@ -52,20 +52,21 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         self.presenter?.view = self
     }
     
-    func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = presenter?.photos.count ?? 0
-        photos = presenter?.photos ?? []
-        
-        if oldCount != newCount {
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
+    func updateTableViewAnimated(from oldCount: Int, to newCount: Int) {
+        guard let presenter else {
+            print("[ImagesListViewController updateTableViewAnimated]: presenterError - ImagesListPresenter is not set")
+            return
         }
+        
+        photos = presenter.photos
+        
+        tableView.performBatchUpdates {
+            let indexPaths = (oldCount..<newCount).map { i in
+                IndexPath(row: i, section: 0)
+            }
+            
+            tableView.insertRows(at: indexPaths, with: .automatic)
+        } completion: { _ in }
     }
     
     func toggleLikeButton(at index: Int, isLiked: Bool) {
@@ -86,7 +87,7 @@ extension ImagesListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
         guard let imageListCell = cell as? ImagesListCell else {
-            print("Typecast Error: Failed to dequeue ImagesListCell")
+            print("[ImagesListViewController cellForRowAt]: typecastError - Failed to dequeue ImagesListCell")
             return UITableViewCell()
         }
 

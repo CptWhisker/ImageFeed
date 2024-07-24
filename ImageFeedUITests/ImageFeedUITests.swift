@@ -25,7 +25,6 @@ final class ImageFeedUITests: XCTestCase {
         sleep(2)
         
         let doneButton = app.toolbars["Toolbar"].buttons["Done"]
-//        let doneButton = app.buttons["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 5))
         doneButton.tap()
         
