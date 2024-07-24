@@ -4,7 +4,7 @@ import ProgressHUD
 
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     // MARK: - Properties
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     private let currentDate = Date()
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

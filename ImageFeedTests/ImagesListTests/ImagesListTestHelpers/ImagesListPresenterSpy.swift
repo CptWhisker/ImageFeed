@@ -3,12 +3,14 @@ import Foundation
 
 final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     var view: ImageFeed.ImagesListViewControllerProtocol?
-    var photos: [ImageFeed.Photo] = []
+    var photos: [Photo] = []
     var viewDidLoadCalled = false
     
     func viewDidLoad() {
         viewDidLoadCalled = true
     }
+    
+    func updateTableViewAnimated() {}
     
     func fetchNextPage() {}
     
