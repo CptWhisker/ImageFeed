@@ -1,7 +1,8 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+final class ProfileViewController: UIViewController,
+                                   ProfileViewControllerProtocol {
     // MARK: - Properties
     private lazy var profilePictureImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: Icons.profilePictureStub))

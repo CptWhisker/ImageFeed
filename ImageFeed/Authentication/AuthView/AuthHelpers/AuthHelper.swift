@@ -1,7 +1,7 @@
 import UIKit
 
 final class AuthHelper: AuthHelperProtocol {
-    let configuration: AuthConfiguration
+    private let configuration: AuthConfiguration
     
     init(configuration: AuthConfiguration = .standart) {
         self.configuration = configuration
@@ -9,7 +9,7 @@ final class AuthHelper: AuthHelperProtocol {
     
     func authRequest() -> URLRequest? {
         guard let url = authURL() else {
-            print("ERROR")
+            print("[AuthHelper authRequest]: urlError - URL does not exist")
             return nil
         }
         
@@ -18,7 +18,7 @@ final class AuthHelper: AuthHelperProtocol {
     
     func authURL() -> URL? {
         guard var urlComponents = URLComponents(string: configuration.authURLString) else {
-            print("ERROR")
+            print("[AuthHelper authURL]: urlComponentsError - unable to create URLComponents from string")
             return nil
         }
         

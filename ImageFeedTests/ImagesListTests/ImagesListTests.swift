@@ -20,8 +20,6 @@ final class ImagesListTests: XCTestCase {
         viewController.configure(presenter)
         presenter.view = viewController
         
-//        _ = viewController.view
-        
         photo = Photo(id: "1", size: CGSize(width: 100, height: 100), createdAt: nil, welcomeDescription: nil, thumbImageURL: "https://randomwebsite.com/image1thumb", largeImageURL: "https://randomwebsite.com/image1large", isLiked: false)
     }
     

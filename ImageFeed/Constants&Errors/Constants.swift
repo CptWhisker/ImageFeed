@@ -21,7 +21,7 @@ enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
 
-enum segueDestinations {
+enum SegueDestinations {
     static let singleImageSegue = "ShowSingleImage"
     static let webViewSegue = "ShowWebView"
 }

@@ -68,18 +68,18 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapLoginButton() {
-        performSegue(withIdentifier: segueDestinations.webViewSegue, sender: self)
+        performSegue(withIdentifier: SegueDestinations.webViewSegue, sender: self)
     }
 }
 
 // MARK: - Navigation
 extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.webViewSegue {
-            guard 
+        if segue.identifier == SegueDestinations.webViewSegue {
+            guard
                 let webViewViewController = segue.destination as? WebViewViewController
             else {
-                assertionFailure("Failed to prepare for \(segueDestinations.webViewSegue) segue")
+                assertionFailure("Failed to prepare for \(SegueDestinations.webViewSegue) segue")
                 return
             }
             

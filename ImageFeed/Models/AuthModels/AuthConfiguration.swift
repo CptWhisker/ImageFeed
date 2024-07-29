@@ -8,11 +8,23 @@ struct AuthConfiguration {
     let defaultBaseURL: URL
     let authURLString: String
     
-    static var standart: AuthConfiguration {
-        return AuthConfiguration(accessKey: Constants.accessKey, secretKey: Constants.secretKey, redirectURI: Constants.redirectURI, accessScope: Constants.accessScope, defaultBaseURL: Constants.defaultBaseURL, authURLString: WebViewConstants.unsplashAuthorizeURLString)
-    }
+    static var standart = AuthConfiguration(
+        accessKey: Constants.accessKey,
+        secretKey: Constants.secretKey,
+        redirectURI: Constants.redirectURI,
+        accessScope: Constants.accessKey,
+        defaultBaseURL: Constants.defaultBaseURL,
+        authURLString: WebViewConstants.unsplashAuthorizeURLString
+    )
     
-    init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, defaultBaseURL: URL, authURLString: String) {
+    init(
+        accessKey: String,
+        secretKey: String,
+        redirectURI: String,
+        accessScope: String,
+        defaultBaseURL: URL,
+        authURLString: String
+    ) {
         self.accessKey = accessKey
         self.secretKey = secretKey
         self.redirectURI = redirectURI

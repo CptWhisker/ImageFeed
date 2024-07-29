@@ -2,7 +2,8 @@ import UIKit
 import Kingfisher
 import ProgressHUD
 
-final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
+final class ImagesListViewController: UIViewController,
+                                      ImagesListViewControllerProtocol {
     // MARK: - Properties
     @IBOutlet var tableView: UITableView!
     private let currentDate = Date()
@@ -26,7 +27,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     
     // MARK: - Private Functions
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.singleImageSegue {
+        if segue.identifier == SegueDestinations.singleImageSegue {
             guard
                 let viewController = segue.destination as? SingleImageViewController,
                 let indexPath = sender as? IndexPath
@@ -75,6 +76,14 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
             cell.updateLikeButton(isLiked: isLiked)
         }
     }
+    
+    func showBlockingAnimation() {
+        UIBlockingProgressHUD.showAnimation()
+    }
+    
+    func dismissBlockingAnimation() {
+        UIBlockingProgressHUD.dismissAnimation()
+    }
 }
 
 // MARK: - DataSource
@@ -101,7 +110,7 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: segueDestinations.singleImageSegue, sender: indexPath)
+        performSegue(withIdentifier: SegueDestinations.singleImageSegue, sender: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

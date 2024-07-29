@@ -9,7 +9,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     private var profile: Profile?
     private var profileImageServiceObserver: NSObjectProtocol?
 
-    init(profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol, profileLogoutService: ProfileLogoutServiceProtocol) {
+    init(
+        profileService: ProfileServiceProtocol,
+        profileImageService: ProfileImageServiceProtocol,
+        profileLogoutService: ProfileLogoutServiceProtocol
+    ) {
         self.profileService = profileService
         self.profileImageService = profileImageService
         self.profileLogoutService = profileLogoutService

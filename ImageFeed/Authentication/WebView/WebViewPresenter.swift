@@ -2,7 +2,7 @@ import UIKit
 
 final class WebViewPresenter: WebViewPresenterProtocol {
     weak var view: WebViewViewControllerProtocol?
-    var authHelper: AuthHelperProtocol
+    private let authHelper: AuthHelperProtocol
     
     init(authHelper: AuthHelperProtocol) {
         self.authHelper = authHelper
@@ -16,7 +16,7 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         
         view?.load(request: request)
         
-        didUpdateProgressValue(0)
+        didUpdateProgressValue(.zero)
     }
     
     func didUpdateProgressValue(_ newValue: Double) {

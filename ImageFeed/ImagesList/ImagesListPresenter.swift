@@ -8,7 +8,10 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     private let storage: OAuth2TokenStorageProtocol
     private var imageServiceObserver: NSObjectProtocol?
     
-    init(imagesListService: ImagesListServiceProtocol, storage: OAuth2TokenStorageProtocol) {
+    init(
+        imagesListService: ImagesListServiceProtocol,
+         storage: OAuth2TokenStorageProtocol
+    ) {
         self.imagesListService = imagesListService
         self.storage = storage
     }
@@ -55,12 +58,12 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         let photo = photos[index]
         let isLiked = photo.isLiked
         
-        UIBlockingProgressHUD.showAnimation()
+        view?.showBlockingAnimation()
         
         imagesListService.changeLike(photoId: photo.id, isLike: isLiked) { [weak self] result in
             guard let self else { return }
             
-            UIBlockingProgressHUD.dismissAnimation()
+            view?.dismissBlockingAnimation()
             
             switch result {
             case .success:

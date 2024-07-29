@@ -1,7 +1,8 @@
 import UIKit
 import WebKit
 
-final class WebViewViewController: UIViewController, WebViewViewControllerProtocol {
+final class WebViewViewController: UIViewController,
+                                   WebViewViewControllerProtocol {
     // MARK: - Properties
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
