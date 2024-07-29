@@ -1,10 +1,12 @@
 import UIKit
 import WebKit
 
-final class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController,
+                                   WebViewViewControllerProtocol {
     // MARK: - Properties
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
+        webView.accessibilityIdentifier = "UnsplashWebView"
         webView.backgroundColor = .ypWhite
         webView.translatesAutoresizingMaskIntoConstraints = false
         return webView
@@ -17,20 +19,21 @@ final class WebViewViewController: UIViewController {
     }()
     private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
+    var presenter: WebViewPresenterProtocol?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.navigationDelegate = self
-        
         configureInterface()
-        loadAuthView()
+        
+        webView.navigationDelegate = self
+        presenter?.viewDidLoad()
         
         estimatedProgressObservation = webView.observe(\.estimatedProgress, options: []) { [weak self] _, _ in
             guard let self else { return }
             
-            self.updateProgress()
+            self.presenter?.didUpdateProgressValue(webView.estimatedProgress)
         }
     }
     
@@ -63,46 +66,26 @@ final class WebViewViewController: UIViewController {
     }
     
     // MARK: - Loading Data
-    private func loadAuthView() {
-        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Error: Unable to create URLComponents from unsplashAuthorizeURLString")
-            return
+    private func getCode(from navigationAction: WKNavigationAction) -> String? {
+        if let url = navigationAction.request.url {
+            return presenter?.code(from: url)
         }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            print("Error: Unable to create URL from urlComponents")
-            return
-        }
-        
-        let request = URLRequest(url: url)
+        print("[WebViewViewController getCode]: authError - Failed to receive authorization code")
+        return nil
+    }
+    
+    //MARK: - Public Functions
+    func load(request: URLRequest) {
         webView.load(request)
     }
     
-    private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
-        }
+    //MARK: - KVO
+    func setProgressValue(_ newValue: Float) {
+        loadingBar.progress = newValue
     }
     
-    //MARK: - KVO
-    private func updateProgress() {
-        loadingBar.progress = Float(webView.estimatedProgress)
-        loadingBar.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    func setProgressHidden(_ isHidden: Bool) {
+        loadingBar.isHidden = isHidden
     }
 }
 
@@ -113,7 +96,7 @@ extension WebViewViewController: WKNavigationDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-        if let code = code(from: navigationAction) {
+        if let code = getCode(from: navigationAction) {
             delegate?.webViewViewControllerDidAuthenticateWithCode(self, code: code)
             decisionHandler(.cancel)
         } else {

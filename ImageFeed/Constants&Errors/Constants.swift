@@ -8,6 +8,7 @@ enum Constants {
     static let grantType = "authorization_code"
     static let baseURL = "https://unsplash.com"
     static let urlPath = "/oauth/token"
+    
     static var defaultBaseURL: URL {
         guard let url = URL(string: "https://api.unsplash.com") else {
             fatalError("Invalid URL: https://api.unsplash.com")
@@ -20,11 +21,9 @@ enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 }
 
-enum segueDestinations {
+enum SegueDestinations {
     static let singleImageSegue = "ShowSingleImage"
     static let webViewSegue = "ShowWebView"
-    static let authSegue = "proceedToAuthViewController"
-    static let imageFeedSegue = "proceedToImageFeed"
 }
 
 enum Icons {

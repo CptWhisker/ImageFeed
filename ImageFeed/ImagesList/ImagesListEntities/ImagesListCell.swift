@@ -7,7 +7,11 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet private weak var cellImage: UIImageView!
     @IBOutlet private weak var likeButton: UIButton!
     @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var dateGradientView: UIView!
+    @IBOutlet private weak var dateGradientView: UIView! {
+        didSet {
+            setupDateGradientLayer()
+        }
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -15,7 +19,7 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.cancelDownloadTask()
     }
     
-    func setupDateGradientLayer() {
+    private func setupDateGradientLayer() {
         let dateGradientLayer = CAGradientLayer()
         dateGradientLayer.frame = dateGradientView.bounds
         dateGradientLayer.colors = [
@@ -49,13 +53,18 @@ final class ImagesListCell: UITableViewCell {
             self.likeButton.setImage(UIImage(named: photo.isLiked ? Icons.buttonActivated : Icons.buttonDeactivated), for: .normal)
             self.likeButton.addTarget(target, action: action, for: .touchUpInside)
             self.likeButton.tag = index
+            self.likeButton.accessibilityIdentifier = "Like button"
             
             guard let parsedDate = photo.createdAt else {
                 self.dateLabel.text = ""
                 return
             }
             self.dateLabel.text = dateFormatter.string(from: parsedDate)
-            self.setupDateGradientLayer()
         }
+    }
+    
+    func updateLikeButton(isLiked: Bool) {
+        let toggledImage = isLiked ? Icons.buttonActivated : Icons.buttonDeactivated
+        likeButton.setImage(UIImage(named: toggledImage), for: .normal)
     }
 }

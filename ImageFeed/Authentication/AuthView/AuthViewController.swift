@@ -11,6 +11,7 @@ final class AuthViewController: UIViewController {
     }()
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
+        button.accessibilityIdentifier = "Authenticate"
         button.layer.cornerRadius = 16
         button.tintColor = .ypBlack
         button.backgroundColor = .ypWhite
@@ -67,18 +68,25 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapLoginButton() {
-        performSegue(withIdentifier: segueDestinations.webViewSegue, sender: self)
+        performSegue(withIdentifier: SegueDestinations.webViewSegue, sender: self)
     }
 }
 
 // MARK: - Navigation
 extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueDestinations.webViewSegue {
-            guard let webViewViewController = segue.destination as? WebViewViewController else {
-                assertionFailure("Failed to prepare for \(segueDestinations.webViewSegue) segue")
+        if segue.identifier == SegueDestinations.webViewSegue {
+            guard
+                let webViewViewController = segue.destination as? WebViewViewController
+            else {
+                assertionFailure("Failed to prepare for \(SegueDestinations.webViewSegue) segue")
                 return
             }
+            
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)

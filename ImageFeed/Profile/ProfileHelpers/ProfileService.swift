@@ -1,6 +1,6 @@
 import UIKit
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol {
     // MARK: - Properties
     static let shared = ProfileService()
     private var accessToken: String?

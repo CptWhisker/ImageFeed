@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-final class ProfileLogoutService {
+final class ProfileLogoutService: ProfileLogoutServiceProtocol {
     // MARK: - Properties
     static let shared = ProfileLogoutService()
     
